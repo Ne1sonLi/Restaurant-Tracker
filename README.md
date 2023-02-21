@@ -11,11 +11,8 @@ different lists:
 - **Try-next**
 
 By having these two lists separate from all the restaurants the user can easily locate their favourite restaurants as
-well as the ones that they have bookmarked as their next place to visit. In their favourites list, users will be able to
-do two things:
-
-- add a **rating** out of 10
-- write some **comments** about the restaurant
+well as the ones that they have bookmarked as their next place to visit. In their favourites list, users will be able 
+to add a **rating** out of 10
 
 Overall, this application will help expose its user's to a bunch of different cuisines near the greater Vancouver area
 and allow them to keep track of what restaurants they enjoyed and which ones to try next.
@@ -25,15 +22,14 @@ new places to eat or tourists who are planning to visit. Furthermore, it can als
 not everyone is from the greater Vancouver area. Therefore, they could use it to get some ideas on where to eat during
 their next meal out with friends. This application interests me because I enjoy food a lot. When I go hang out with
 friends we also enjoy trying out new restaurants but usually don't know which ones to try. Thus, by having an
-application like this, we can recommend our favourite restaurants to each other and provide then with the comments we
-made about the restaurant such as *"Try the lobster, it was amazing!"* so that we can have the best experience at that
-restaurant.
+application like this, we can recommend our favourite restaurants to each other so that we can have the best experience 
+at that restaurant.
 
 ## User Stories
 
 - As a user, I want to be able to browse restaurants filtered by a specific cuisine
 - As a user, I want to be able to select a restaurant and add it to my favourites list
 - As a user, I want to be able to select a restaurant and add it to my try-next list
+- As a user, I want to be able to select a restaurant in my try-next list and remove it
+- As a user, I want to be able to select a restaurant in my try-next list and move it to my favourites list
 - As a user, I want to be able to select a restaurant in my favourites list and rate it out of 10
-- As a user, I want to be able to select a restaurant in my favourites list and write a comment about it
-- As a user, I want to be able to view the price range of restaurants in the greater Vancouver area
