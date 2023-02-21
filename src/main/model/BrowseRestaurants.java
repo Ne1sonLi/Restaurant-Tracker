@@ -13,9 +13,11 @@ public class BrowseRestaurants {
         browseRestaurants = new ArrayList<>();
     }
 
-    // EFFECTS: adds given restaurant to the browse collection
+    // EFFECTS: adds given restaurant to the browse collection if it is not already in collection
     public void addBrowseRestaurants(Restaurant r) {
-        browseRestaurants.add(r);
+        if (!containsBrowseRestaurant(r.getName())) {
+            browseRestaurants.add(r);
+        }
     }
 
     // EFFECTS: return true is restaurant name is in browse collection, false otherwise
@@ -62,7 +64,7 @@ public class BrowseRestaurants {
     }
 
     // REQUIRES: cuisine to be a cuisine type of at least one restaurant in browse collection
-    // EFFECTS: creates a list that only contains restaurants with givein cuisine type
+    // EFFECTS: creates a list that only contains restaurants with given cuisine type
     public List<Restaurant> filterByCuisine(String cuisine) {
         List<Restaurant> filteredRestaurants = new ArrayList<>();
         for (Restaurant r : browseRestaurants) {
@@ -71,6 +73,11 @@ public class BrowseRestaurants {
             }
         }
         return filteredRestaurants;
+    }
+
+    // EFFECTS: returns true if there are no restaurants in browse collection
+    public boolean hasNothing() {
+        return browseRestaurants.isEmpty();
     }
 
 }

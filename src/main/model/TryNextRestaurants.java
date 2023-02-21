@@ -14,9 +14,11 @@ public class TryNextRestaurants {
     }
 
     // MODIFIES: this
-    // EFFECTS: adds given restaurant to the try next list
+    // EFFECTS: adds given restaurant to the try next list if not already in try next list
     public void addTryNext(Restaurant r) {
-        trynext.add(r);
+        if (!containsTryNextRestaurant(r.getName())) {
+            trynext.add(r);
+        }
     }
 
     // EFFECTS: returns the number of restaurants in the try next list

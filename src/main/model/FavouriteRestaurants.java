@@ -14,9 +14,11 @@ public class FavouriteRestaurants {
     }
 
     // MODIFIES: this
-    // EFFECTS: Adds a new favourite restaurant to the favourite restaurants list
+    // EFFECTS: Adds a new favourite restaurant to the favourite restaurants list if it is not in list already
     public void addFavourite(Restaurant r) {
-        favourites.add(r);
+        if (!containsFavouriteRestaurant(r.getName())) {
+            favourites.add(r);
+        }
     }
 
     // EFFECTS: returns the number of favourite restaurants currently in the list
