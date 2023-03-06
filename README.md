@@ -33,3 +33,5 @@ at that restaurant.
 - As a user, I want to be able to select a restaurant in my try-next list and remove it
 - As a user, I want to be able to select a restaurant in my try-next list and move it to my favourites list
 - As a user, I want to be able to select a restaurant in my favourites list and rate it out of 10
+- As a user, I want to be able to save my Try Next and Favourites list of restaurants
+- As a user, I want to be able to have the option to reload my previously saved Try Next and Favourites lists 
