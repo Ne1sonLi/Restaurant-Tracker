@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+// JsonWriter is templated from the Workroom example supplied by CPSC 210. https://github.com/stleary/JSON-java.git
 // Represents a writer that writes JSON representations of restaurant lists to file
 public class JsonWriter {
 

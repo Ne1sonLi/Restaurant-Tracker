@@ -1,7 +1,9 @@
 package persistence;
 
 import model.FavouriteRestaurants;
+import model.Restaurant;
 import model.TryNextRestaurants;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
@@ -11,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+// JsonReader is templated from the Workroom example supplied by CPSC 210. https://github.com/stleary/JSON-java.git
 // Represents a reader that reads Try Next and Favourites lists from JSON data stored in file
 public class JsonReader {
 
@@ -21,16 +24,28 @@ public class JsonReader {
         this.fileSource = fileSource;
     }
 
-    public TryNextRestaurants readTryNext() throws FileNotFoundException {
-
-        return null;
+    // EFFECTS: reads Try Next List from file and returns it;
+    // throws IOException if error occurs when reading data from source
+    public TryNextRestaurants readTryNext(String fileSource) throws IOException {
+        String jsonData = readFile(fileSource);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseTryNextRestaurants(jsonObject);
     }
 
-    public FavouriteRestaurants readFavourites() throws FileNotFoundException {
-
-        return null;
+    // EFFECTS: parses TryNextRestaurant from JSON Object and returns it
+    private TryNextRestaurants parseTryNextRestaurants(JSONObject jsonObject) {
+        TryNextRestaurants trynext = new TryNextRestaurants();
+        addAllTryNextRestaurants(trynext, jsonObject);
+        return trynext;
     }
 
+    public FavouriteRestaurants readFavourites(JSONObject jsonObject) throws FileNotFoundException {
+        FavouriteRestaurants favourites = new FavouriteRestaurants();
+        addAllFavouriteRestaurants(favourites, jsonObject);
+        return favourites;
+    }
+
+    // EFFECTS: reads given source file and returns it as a string
     public String readFile(String fileSource) throws IOException {
         StringBuilder jsonContent = new StringBuilder();
 
@@ -41,5 +56,46 @@ public class JsonReader {
         return jsonContent.toString();
     }
 
+    // MODIFIES: trynext
+    // EFFECTS: parses restaurants from JSON Object and adds them to trynext
+    public void addAllTryNextRestaurants(TryNextRestaurants trynext, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("restaurants");
+        for (Object json : jsonArray) {
+            JSONObject restaurant = (JSONObject) json;
+            addToTryNext(trynext, restaurant);
+        }
+    }
+
+    // MODIFIES: trynext
+    // EFFECTS: parses Restaurant from JSON Object and adds it to trynext
+    public void addToTryNext(TryNextRestaurants trynext, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        String location = jsonObject.getString("location");
+        String cuisine = jsonObject.getString("cuisine");
+        int rating = jsonObject.getInt("rating");
+        Restaurant restaurant = new Restaurant(name, location, cuisine, rating);
+        trynext.addTryNext(restaurant);
+    }
+
+    // MODIFIES: favourites
+    // EFFECTS: parses restaurants from JSON Object and adds them to favourites
+    public void addAllFavouriteRestaurants(FavouriteRestaurants favourites, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("restaurants");
+        for (Object json : jsonArray) {
+            JSONObject restaurant = (JSONObject) json;
+            addToFavourites(favourites, restaurant);
+        }
+    }
+
+    // MODIFIES: favourites
+    // EFFECTS: parses Restaurant from JSON Object and adds it to favourites
+    private void addToFavourites(FavouriteRestaurants favourites, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        String location = jsonObject.getString("location");
+        String cuisine = jsonObject.getString("cuisine");
+        int rating = jsonObject.getInt("rating");
+        Restaurant restaurant = new Restaurant(name, location, cuisine, rating);
+        favourites.addFavourite(restaurant);
+    }
 
 }
