@@ -6,7 +6,6 @@ import model.TryNextRestaurants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,11 +16,8 @@ import java.util.stream.Stream;
 // Represents a reader that reads Try Next and Favourites lists from JSON data stored in file
 public class JsonReader {
 
-    private String fileSource;
-
     // EFFECTS: constructs a JSON reader to read Try Next and Favourites lists from file source
-    public JsonReader(String fileSource) {
-        this.fileSource = fileSource;
+    public JsonReader() {
     }
 
     // EFFECTS: reads Try Next List from file and returns it;
@@ -39,7 +35,16 @@ public class JsonReader {
         return trynext;
     }
 
-    public FavouriteRestaurants readFavourites(JSONObject jsonObject) throws FileNotFoundException {
+    // EFFECTS: reads Favourites List from file and returns it;
+    // throws IOException if error occurs when reading data from source
+    public FavouriteRestaurants readFavourites(String fileSource) throws IOException {
+        String jsonData = readFile(fileSource);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseFavouriteRestaurants(jsonObject);
+    }
+
+    // EFFECTS: parses FavouriteRestaurants from JSON Object and returns it
+    private FavouriteRestaurants parseFavouriteRestaurants(JSONObject jsonObject) {
         FavouriteRestaurants favourites = new FavouriteRestaurants();
         addAllFavouriteRestaurants(favourites, jsonObject);
         return favourites;
@@ -72,8 +77,7 @@ public class JsonReader {
         String name = jsonObject.getString("name");
         String location = jsonObject.getString("location");
         String cuisine = jsonObject.getString("cuisine");
-        int rating = jsonObject.getInt("rating");
-        Restaurant restaurant = new Restaurant(name, location, cuisine, rating);
+        Restaurant restaurant = new Restaurant(name, location, cuisine);
         trynext.addTryNext(restaurant);
     }
 
@@ -94,7 +98,8 @@ public class JsonReader {
         String location = jsonObject.getString("location");
         String cuisine = jsonObject.getString("cuisine");
         int rating = jsonObject.getInt("rating");
-        Restaurant restaurant = new Restaurant(name, location, cuisine, rating);
+        Restaurant restaurant = new Restaurant(name, location, cuisine);
+        restaurant.setRating(rating);
         favourites.addFavourite(restaurant);
     }
 

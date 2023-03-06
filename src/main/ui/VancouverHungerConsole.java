@@ -14,15 +14,15 @@ public class VancouverHungerConsole {
 
     private static final String JSON_TRY_NEXT = "./data/TryNextList.json";
     private static final String JSON_FAVOURITES = "./data/Favourites.json";
-    private BrowseRestaurants browse;
+    private final BrowseRestaurants browse;
     private List<Restaurant> filtered;
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
-    private Scanner input;
-    private JsonWriter jsonWriterTryNext;
-    private JsonWriter jsonWriterFavourites;
-    private JsonReader jsonReaderTryNext;
-    private JsonReader jsonReaderFavourites;
+    private final Scanner input;
+    private final JsonWriter jsonWriterTryNext;
+    private final JsonWriter jsonWriterFavourites;
+    private final JsonReader jsonReader;
+    // private final JsonReader jsonReaderFavourites;
 
     // EFFECTS: runs the console based ui application
     public VancouverHungerConsole() {
@@ -32,8 +32,8 @@ public class VancouverHungerConsole {
         input = new Scanner(System.in);
         jsonWriterTryNext = new JsonWriter(JSON_TRY_NEXT);
         jsonWriterFavourites = new JsonWriter(JSON_FAVOURITES);
-        jsonReaderTryNext = new JsonReader(JSON_TRY_NEXT);
-        jsonReaderFavourites = new JsonReader(JSON_FAVOURITES);
+        jsonReader = new JsonReader();
+        // jsonReaderFavourites = new JsonReader(JSON_FAVOURITES);
         runConsoleUI();
     }
 
@@ -362,7 +362,6 @@ public class VancouverHungerConsole {
     public void displayTryNextViewAll() {
         displayTryNextRestaurants();
         if (!trynext.hasNothing()) {
-            System.out.println("\n");
             System.out.println("For more details type the name of the restaurant");
             System.out.println("q -> Go back to Try Next Menu");
             String operation = input.nextLine();
@@ -609,6 +608,7 @@ public class VancouverHungerConsole {
         displayRemoveFavouritesMenu();
     }
 
+    // EFFECTS: saves trynext list and favourites list to separate files
     public void saveBothRestaurantLists() {
         try {
             jsonWriterTryNext.open();
@@ -625,15 +625,18 @@ public class VancouverHungerConsole {
         displayMainMenu();
     }
 
-    public String loadBothRestaurantLists() {
-        String result = "";
+    // MODIFIES: this
+    // EFFECTS: loads trynext list and favourites list from their respective files
+    public void loadBothRestaurantLists() {
         try {
-            result = jsonReaderTryNext.readFile(JSON_TRY_NEXT);
+            trynext = jsonReader.readTryNext(JSON_TRY_NEXT);
+            favourites = jsonReader.readFavourites(JSON_FAVOURITES);
+            System.out.println("Try Next list has been loaded from " + JSON_TRY_NEXT);
+            System.out.println("Favourites list has been loaded from " + JSON_FAVOURITES);
         } catch (IOException e) {
             System.out.println("Failed to read file");
         }
-        System.out.println(result);
-        return result;
+        displayMainMenu();
     }
 
 }

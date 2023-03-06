@@ -4,7 +4,6 @@ import model.FavouriteRestaurants;
 import model.TryNextRestaurants;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
@@ -13,7 +12,7 @@ import java.io.PrintWriter;
 public class JsonWriter {
 
     private PrintWriter writer;
-    private String fileDestination;
+    private final String fileDestination;
 
     // EFFECTS: constructs a JSON writer to write JSON Objects to the given destination file
     public JsonWriter(String destination) {
@@ -23,7 +22,7 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: opens writer destination, if destination cannot be opened, throw FileNotFoundException
     public void open() throws FileNotFoundException {
-        writer = new PrintWriter(new File(fileDestination));
+        writer = new PrintWriter(fileDestination);
     }
 
     // MODIFIES: this

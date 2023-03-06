@@ -1,17 +1,4 @@
 {
       "name": "Favourites List",
-      "restaurants": [
-            {
-                  "name": "Miku",
-                  "rating": 8,
-                  "cuisine": "Japanese",
-                  "location": "200 Granville St. #70"
-            },
-            {
-                  "name": "Sushi Mura",
-                  "rating": 6,
-                  "cuisine": "Japanese",
-                  "location": "5508 Hollybridge Way #115"
-            }
-      ]
+      "restaurants": []
 }
