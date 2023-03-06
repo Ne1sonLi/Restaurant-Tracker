@@ -1,0 +1,17 @@
+{
+      "name": "Favourites List",
+      "restaurants": [
+            {
+                  "name": "Nori",
+                  "rating": 8,
+                  "cuisine": "Japanese",
+                  "location": "001 UBC"
+            },
+            {
+                  "name": "Pizza Hut",
+                  "rating": 7,
+                  "cuisine": "Pizza",
+                  "location": "003 UBC"
+            }
+      ]
+}
