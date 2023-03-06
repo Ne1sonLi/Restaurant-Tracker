@@ -1,4 +1,9 @@
 {
       "name": "Try Next List",
-      "restaurants": []
+      "restaurants": [{
+            "name": "Dolar Shop",
+            "rating": -1,
+            "cuisine": "Hotpot",
+            "location": "5300 No. 3 Rd"
+      }]
 }
