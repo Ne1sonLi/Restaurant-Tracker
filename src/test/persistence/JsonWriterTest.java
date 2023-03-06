@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// JsonWriterTest is templated from the Workroom example supplied by CPSC 210. https://github.com/stleary/JSON-java.git
 public class JsonWriterTest {
 
     @Test
