@@ -72,6 +72,9 @@ public class VancouverHungerConsole {
         Restaurant sura = new Restaurant("Sura", "4151 Hazelbridge Way #1830", "Korean");
         Restaurant sushiMura = new Restaurant("Sushi Mura", "5508 Hollybridge Way #115", "Japanese");
         Restaurant deerGarden = new Restaurant("Deer Garden", "8580 Alexandra Rd. #2015", "Chinese");
+        Restaurant mcDonalds = new Restaurant("McDonald's", "5728 University Blvd #101", "Burger");
+        Restaurant uncleFatih = new Restaurant("Uncle Fatih's", "6045 University Blvd", "Pizza");
+        Restaurant dlChicken = new Restaurant("DownLow Chicken", "6065 University Blvd", "Chicken");
         browse = new BrowseRestaurants();
         trynext = new TryNextRestaurants();
         favourites = new FavouriteRestaurants();
@@ -79,6 +82,9 @@ public class VancouverHungerConsole {
         browse.addBrowseRestaurants(sura);
         browse.addBrowseRestaurants(sushiMura);
         browse.addBrowseRestaurants(deerGarden);
+        browse.addBrowseRestaurants(mcDonalds);
+        browse.addBrowseRestaurants(uncleFatih);
+        browse.addBrowseRestaurants(dlChicken);
         input = new Scanner(System.in);
     }
 
@@ -157,6 +163,9 @@ public class VancouverHungerConsole {
         System.out.println("\t 1. Japanese");
         System.out.println("\t 2. Korean");
         System.out.println("\t 3. Chinese");
+        System.out.println("\t 4. Burger");
+        System.out.println("\t 5. Pizza");
+        System.out.println("\t 6. Chicken");
         System.out.println("To filter, select a type of cuisine");
         System.out.println("q -> Go back to Browse Menu");
         String operation = input.nextLine();
@@ -276,7 +285,7 @@ public class VancouverHungerConsole {
         int index = browse.searchBrowseRestaurants(name);
         Restaurant restaurant = browse.getRestaurant(index);
         System.out.println("Please rate " + name + " from 1 to 10:");
-        int rating = input.nextInt();
+        int rating = Integer.parseInt(input.nextLine());
 
         if ((0 <= rating) && (rating <= 10)) {
             restaurant.setRating(rating);
@@ -391,7 +400,7 @@ public class VancouverHungerConsole {
         int index = trynext.searchTryNext(name);
         Restaurant restaurant = trynext.getRestaurant(index);
         System.out.println("Please rate " + name + " from 1 to 10:");
-        int rating = input.nextInt();
+        int rating = Integer.parseInt(input.nextLine());
 
         if ((0 <= rating) && (rating <= 10)) {
             restaurant.setRating(rating);
@@ -441,6 +450,7 @@ public class VancouverHungerConsole {
         System.out.println("\t q -> Go back to Main Menu");
         String operation = input.nextLine();
         processFavouritesMenu(operation);
+
     }
 
     // EFFECTS: processes user input from the favourite restaurant menu
@@ -532,7 +542,8 @@ public class VancouverHungerConsole {
         Restaurant restaurant = favourites.getFavRestaurant(index);
         System.out.println("The current rating for " + name + " is " + restaurant.getRating());
         System.out.println("Please enter your new rating for " + name + " :");
-        int rating = input.nextInt();
+        int rating = Integer.parseInt(input.nextLine());
+
 
         if ((rating >= 0) && (rating <= 10)) {
             restaurant.setRating(rating);
