@@ -1,0 +1,17 @@
+{
+      "name": "Try Next List",
+      "restaurants": [
+            {
+                  "name": "Deer Garden",
+                  "rating": -1,
+                  "cuisine": "Chinese",
+                  "location": "8580 Alexandra Rd. #2015"
+            },
+            {
+                  "name": "Sura",
+                  "rating": -1,
+                  "cuisine": "Korean",
+                  "location": "4151 Hazelbridge Way #1830"
+            }
+      ]
+}

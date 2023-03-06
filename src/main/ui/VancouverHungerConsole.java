@@ -1,22 +1,39 @@
 package ui;
 
 import model.*;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 // Vancouver Hunger console based application
 public class VancouverHungerConsole {
 
+    private static final String JSON_TRY_NEXT = "./data/TryNextList.json";
+    private static final String JSON_FAVOURITES = "./data/Favourites.json";
     private BrowseRestaurants browse;
     private List<Restaurant> filtered;
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
-
     private Scanner input;
+    private JsonWriter jsonWriterTryNext;
+    private JsonWriter jsonWriterFavourites;
+    private JsonReader jsonReaderTryNext;
+    private JsonReader jsonReaderFavourites;
 
     // EFFECTS: runs the console based ui application
     public VancouverHungerConsole() {
+        browse = new BrowseRestaurants();
+        trynext = new TryNextRestaurants();
+        favourites = new FavouriteRestaurants();
+        input = new Scanner(System.in);
+        jsonWriterTryNext = new JsonWriter(JSON_TRY_NEXT);
+        jsonWriterFavourites = new JsonWriter(JSON_FAVOURITES);
+        jsonReaderTryNext = new JsonReader(JSON_TRY_NEXT);
+        jsonReaderFavourites = new JsonReader(JSON_FAVOURITES);
         runConsoleUI();
     }
 
@@ -47,6 +64,8 @@ public class VancouverHungerConsole {
         System.out.println("\t b -> Browse restaurants");
         System.out.println("\t t -> Try Next list");
         System.out.println("\t f -> Favourites list");
+        System.out.println("\t s -> Save Try Next and Favourites lists");
+        System.out.println("\t l -> Load Try Next and Favourites lists");
         System.out.println("\t x -> Quit Vancouver Hunger");
     }
 
@@ -58,6 +77,10 @@ public class VancouverHungerConsole {
             displayTryNextMenu();
         } else if (operation.equals("f")) {
             displayFavouritesMenu();
+        } else if (operation.equals("s")) {
+            saveBothRestaurantLists();
+        } else if (operation.equals("l")) {
+            loadBothRestaurantLists();
         } else {
             System.out.println("Invalid selection, please try again.");
             displayMainMenu();
@@ -75,9 +98,6 @@ public class VancouverHungerConsole {
         Restaurant mcDonalds = new Restaurant("McDonald's", "5728 University Blvd #101", "Burger");
         Restaurant uncleFatih = new Restaurant("Uncle Fatih's", "6045 University Blvd", "Pizza");
         Restaurant dlChicken = new Restaurant("DownLow Chicken", "6065 University Blvd", "Chicken");
-        browse = new BrowseRestaurants();
-        trynext = new TryNextRestaurants();
-        favourites = new FavouriteRestaurants();
         browse.addBrowseRestaurants(miku);
         browse.addBrowseRestaurants(sura);
         browse.addBrowseRestaurants(sushiMura);
@@ -85,7 +105,6 @@ public class VancouverHungerConsole {
         browse.addBrowseRestaurants(mcDonalds);
         browse.addBrowseRestaurants(uncleFatih);
         browse.addBrowseRestaurants(dlChicken);
-        input = new Scanner(System.in);
     }
 
     // EFFECTS: displays the browse collection menu options for the user
@@ -589,4 +608,32 @@ public class VancouverHungerConsole {
         System.out.println(name + " has been removed from your Favourites list");
         displayRemoveFavouritesMenu();
     }
+
+    public void saveBothRestaurantLists() {
+        try {
+            jsonWriterTryNext.open();
+            jsonWriterTryNext.writeTryNext(trynext);
+            jsonWriterTryNext.close();
+            jsonWriterFavourites.open();
+            jsonWriterFavourites.writeFavourites(favourites);
+            jsonWriterFavourites.close();
+            System.out.println("Saved Try Next list to " + JSON_TRY_NEXT);
+            System.out.println("Saved Favourites list to " + JSON_FAVOURITES);
+        } catch (FileNotFoundException e) {
+            System.out.println("Failed to write file");
+        }
+        displayMainMenu();
+    }
+
+    public String loadBothRestaurantLists() {
+        String result = "";
+        try {
+            result = jsonReaderTryNext.readFile(JSON_TRY_NEXT);
+        } catch (IOException e) {
+            System.out.println("Failed to read file");
+        }
+        System.out.println(result);
+        return result;
+    }
+
 }
