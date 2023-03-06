@@ -1,0 +1,17 @@
+{
+      "name": "Try Next List",
+      "restaurants": [
+            {
+                  "name": "Pizza Hut",
+                  "rating": -1,
+                  "cuisine": "Pizza",
+                  "location": "003 UBC"
+            },
+            {
+                  "name": "Nori",
+                  "rating": -1,
+                  "cuisine": "Japanese",
+                  "location": "001 UBC"
+            }
+      ]
+}

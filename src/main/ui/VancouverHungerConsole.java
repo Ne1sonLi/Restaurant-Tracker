@@ -95,16 +95,20 @@ public class VancouverHungerConsole {
         Restaurant sura = new Restaurant("Sura", "4151 Hazelbridge Way #1830", "Korean");
         Restaurant sushiMura = new Restaurant("Sushi Mura", "5508 Hollybridge Way #115", "Japanese");
         Restaurant deerGarden = new Restaurant("Deer Garden", "8580 Alexandra Rd. #2015", "Chinese");
-        Restaurant mcDonalds = new Restaurant("McDonald's", "5728 University Blvd #101", "Burger");
-        Restaurant uncleFatih = new Restaurant("Uncle Fatih's", "6045 University Blvd", "Pizza");
-        Restaurant dlChicken = new Restaurant("DownLow Chicken", "6065 University Blvd", "Chicken");
+        Restaurant dolarShop = new Restaurant("Dolar Shop", "5300 No. 3 Rd", "Hotpot");
+        Restaurant haidilao = new Restaurant("Haidilao", "5890 No. 3 Rd Room 200", "Hotpot");
+        Restaurant chungChun = new Restaurant("Chung chun", "6020 No. 3 R", "Korean");
+        Restaurant shanghaiRiver = new Restaurant("Shanghai River", "7831 Westminster Hwy", "Chinese");
+        Restaurant chickoChicken = new Restaurant("Chicko Chicken", "4328 No. 3 Rd #135", "Korean");
         browse.addBrowseRestaurants(miku);
         browse.addBrowseRestaurants(sura);
         browse.addBrowseRestaurants(sushiMura);
         browse.addBrowseRestaurants(deerGarden);
-        browse.addBrowseRestaurants(mcDonalds);
-        browse.addBrowseRestaurants(uncleFatih);
-        browse.addBrowseRestaurants(dlChicken);
+        browse.addBrowseRestaurants(dolarShop);
+        browse.addBrowseRestaurants(haidilao);
+        browse.addBrowseRestaurants(chungChun);
+        browse.addBrowseRestaurants(shanghaiRiver);
+        browse.addBrowseRestaurants(chickoChicken);
     }
 
     // EFFECTS: displays the browse collection menu options for the user
@@ -182,9 +186,7 @@ public class VancouverHungerConsole {
         System.out.println("\t 1. Japanese");
         System.out.println("\t 2. Korean");
         System.out.println("\t 3. Chinese");
-        System.out.println("\t 4. Burger");
-        System.out.println("\t 5. Pizza");
-        System.out.println("\t 6. Chicken");
+        System.out.println("\t 4. Hotpot");
         System.out.println("To filter, select a type of cuisine");
         System.out.println("q -> Go back to Browse Menu");
         String operation = input.nextLine();

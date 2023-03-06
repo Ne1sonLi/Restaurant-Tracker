@@ -39,8 +39,6 @@ public class JsonWriterTest {
             trynext = jsonReader.readTryNext("./data/testWriterEmptyTryNext.json");
             assertTrue(trynext.hasNothing());
             assertEquals(0, trynext.getNumRestaurants());
-        } catch (FileNotFoundException e) {
-            fail("Should not have thrown exception");
         } catch (IOException e) {
             fail("Should not have thrown exception");
         }
@@ -62,8 +60,6 @@ public class JsonWriterTest {
             favourites = jsonReader.readFavourites("./data/testWriterEmptyFavourites.json");
             assertTrue(favourites.hasNothing());
             assertEquals(0, favourites.getNumRestaurants());
-        } catch (FileNotFoundException e) {
-            fail("Should not have thrown exception");
         } catch (IOException e) {
             fail("Should not have thrown exception");
         }
@@ -91,8 +87,6 @@ public class JsonWriterTest {
             assertEquals(2, trynext.getNumRestaurants());
             assertEquals(0, trynext.searchTryNext(r1.getName()));
             assertEquals(1, trynext.searchTryNext(r2.getName()));
-        } catch (FileNotFoundException e) {
-            fail("Should not have thrown exception");
         } catch (IOException e) {
             fail("Should not have thrown exception");
         }
@@ -124,8 +118,6 @@ public class JsonWriterTest {
             assertEquals(1, favourites.searchFavourites(r2.getName()));
             assertEquals(8, favourites.getFavRestaurant(0).getRating());
             assertEquals(7, favourites.getFavRestaurant(1).getRating());
-        } catch (FileNotFoundException e) {
-            fail("Should not have thrown exception");
         } catch (IOException e) {
             fail("Should not have thrown exception");
         }
