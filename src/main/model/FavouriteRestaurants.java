@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +67,23 @@ public class FavouriteRestaurants {
     // EFFECTS: removes a favourite restaurant in the list at the given index number
     public void removeFavourite(int index) {
         favourites.remove(index);
+    }
+
+    // EFFECTS: returns this as a JSON Object
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Favourites List");
+        jsonObject.put("restaurants", restaurantsToJson());
+        return jsonObject;
+    }
+
+    // EFFECTS: returns restaurants in this list as a JSON Array
+    public JSONArray restaurantsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Restaurant r : favourites) {
+            jsonArray.put(r.toJson());
+        }
+        return jsonArray;
     }
 
 }

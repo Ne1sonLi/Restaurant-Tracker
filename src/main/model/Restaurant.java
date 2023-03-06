@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 // Represents a restaurant with a name, rating, location, cuisine type, and rating
 public class Restaurant {
 
@@ -45,4 +47,13 @@ public class Restaurant {
         return rating;
     }
 
+    // EFFECTS: returns this as a JSON object
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.name);
+        jsonObject.put("location", this.location);
+        jsonObject.put("cuisine", cuisine);
+        jsonObject.put("rating", this.rating);
+        return jsonObject;
+    }
 }

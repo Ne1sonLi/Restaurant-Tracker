@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +69,23 @@ public class TryNextRestaurants {
         int index = searchTryNext(name);
         Restaurant r = getRestaurant(index);
         trynext.remove(r);
+    }
+
+    // EFFECTS: returns this as a JSON Object
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Try Next List");
+        jsonObject.put("restaurants", restaurantsToJson());
+        return jsonObject;
+    }
+
+    // EFFECTS: returns restaurants in this list as a JSON Array
+    public JSONArray restaurantsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Restaurant r : trynext) {
+            jsonArray.put(r.toJson());
+        }
+        return jsonArray;
     }
 
 }
