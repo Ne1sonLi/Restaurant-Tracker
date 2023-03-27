@@ -1,9 +1,9 @@
 {
       "name": "Favourites List",
       "restaurants": [{
-            "name": "Deer Garden",
-            "rating": 10,
-            "cuisine": "Chinese",
-            "location": "8580 Alexandra Rd. #2015"
+            "name": "Chung Chun",
+            "rating": 9,
+            "cuisine": "Korean",
+            "location": "6020 No. 3 R"
       }]
 }

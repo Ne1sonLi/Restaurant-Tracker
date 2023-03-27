@@ -1,9 +1,9 @@
 {
       "name": "Try Next List",
       "restaurants": [{
-            "name": "Dolar Shop",
+            "name": "Miku",
             "rating": -1,
-            "cuisine": "Hotpot",
-            "location": "5300 No. 3 Rd"
+            "cuisine": "Japanese",
+            "location": "200 Granville St. #70"
       }]
 }
