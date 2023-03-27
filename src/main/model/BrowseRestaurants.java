@@ -53,6 +53,10 @@ public class BrowseRestaurants {
         return browseRestaurants.get(index);
     }
 
+    public List<Restaurant> getBrowseRestaurants() {
+        return browseRestaurants;
+    }
+
     // EFFECTS: return true if at least one restaurant has this cuisine type in the browse collection
     public boolean containsCuisineBrowseRestaurant(String cuisine) {
         for (Restaurant r : browseRestaurants) {

@@ -29,6 +29,18 @@ public class BrowseRestaurantsTest {
     }
 
     @Test
+    public void testGetRestaurants() {
+        browse.addBrowseRestaurants(r1);
+        browse.addBrowseRestaurants(r2);
+        browse.addBrowseRestaurants(r3);
+        assertFalse(browse.getBrowseRestaurants().isEmpty());
+        assertEquals(3, browse.getBrowseRestaurants().size());
+        assertEquals(r1, browse.getBrowseRestaurants().get(0));
+        assertEquals(r2, browse.getBrowseRestaurants().get(1));
+        assertEquals(r3, browse.getBrowseRestaurants().get(2));
+    }
+
+    @Test
     public void testAddBrowseRestaurantsOnce() {
         browse.addBrowseRestaurants(r1);
         assertFalse(browse.hasNothing());

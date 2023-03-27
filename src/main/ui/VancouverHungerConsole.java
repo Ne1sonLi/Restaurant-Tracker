@@ -95,11 +95,11 @@ public class VancouverHungerConsole {
         Restaurant sura = new Restaurant("Sura", "4151 Hazelbridge Way #1830", "Korean");
         Restaurant sushiMura = new Restaurant("Sushi Mura", "5508 Hollybridge Way #115", "Japanese");
         Restaurant deerGarden = new Restaurant("Deer Garden", "8580 Alexandra Rd. #2015", "Chinese");
-        Restaurant dolarShop = new Restaurant("Dolar Shop", "5300 No. 3 Rd", "Hotpot");
-        Restaurant haidilao = new Restaurant("Haidilao", "5890 No. 3 Rd Room 200", "Hotpot");
-        Restaurant chungChun = new Restaurant("Chung Chun", "6020 No. 3 R", "Korean");
+        Restaurant dolarShop = new Restaurant("Dolar Shop", "5300 No. 3 Rd.", "Hotpot");
+        Restaurant haidilao = new Restaurant("Haidilao", "5890 No. 3 Rd. Room 200", "Hotpot");
+        Restaurant chungChun = new Restaurant("Chung Chun", "6020 No. 3 Rd.", "Korean");
         Restaurant shanghaiRiver = new Restaurant("Shanghai River", "7831 Westminster Hwy", "Chinese");
-        Restaurant chickoChicken = new Restaurant("Chicko Chicken", "4328 No. 3 Rd #135", "Korean");
+        Restaurant chickoChicken = new Restaurant("Chicko Chicken", "4328 No. 3 Rd. #135", "Korean");
         browse.addBrowseRestaurants(miku);
         browse.addBrowseRestaurants(sura);
         browse.addBrowseRestaurants(sushiMura);
