@@ -4,32 +4,44 @@ import model.BrowseRestaurants;
 import model.FavouriteRestaurants;
 import model.Restaurant;
 import model.TryNextRestaurants;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 // Vancouver Hunger graphical user interface application
 public class VancouverHungerGui extends JFrame implements ActionListener {
 
+    private static final String JSON_TRY_NEXT = "./data/TryNextList.json";
+    private static final String JSON_FAVOURITES = "./data/Favourites.json";
     private BrowseRestaurants browse;
     private List<Restaurant> filtered;
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
     private JLabel label;
     private JTextField field;
+    private final JsonWriter jsonWriterTryNext;
+    private final JsonWriter jsonWriterFavourites;
+    private final JsonReader jsonReader;
 
     // EFFECTS: runs the graphical user interface application
     public VancouverHungerGui() {
         super("Vancouver Hunger");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(500, 500));
+        this.setPreferredSize(new Dimension(700, 700));
         browse = new BrowseRestaurants();
         trynext = new TryNextRestaurants();
         favourites = new FavouriteRestaurants();
+        jsonWriterTryNext = new JsonWriter(JSON_TRY_NEXT);
+        jsonWriterFavourites = new JsonWriter(JSON_FAVOURITES);
+        jsonReader = new JsonReader();
         initializeRestaurants();
         displayMainMenu();
     }
@@ -38,8 +50,10 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("save")) {
+            saveBothRestaurantLists();
             label.setText("Saved Try Next & Favourites Lists!");
         } else if (e.getActionCommand().equals("load")) {
+            loadBothRestaurantLists();
             label.setText("Loaded Try Next & Favourites Lists!");
         } else if (e.getActionCommand().equals("toMainMenu")) {
             displayMainMenu();
@@ -49,6 +63,8 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             displayFilterMenu();
         } else if (e.getActionCommand().equals("toTryNextMenu")) {
             displayTryNextMenu();
+        } else if (e.getActionCommand().equals("toFavouritesMenu")) {
+            displayFavouritesMenu();
         }
 
     }
@@ -153,7 +169,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //displayFavouritesMenu();
+                displayFavouritesMenu();
             }
         };
     }
@@ -466,7 +482,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         JPanel addRatingMenu = new JPanel();
         addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
         addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
-        label = new JLabel("Please give a rating from 1 - 10 for " + name);
+        label = new JLabel("Please give a rating from 0 - 10 for " + name);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         addRatingMenu.add(label);
         field = new JTextField();
@@ -506,11 +522,14 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         JPanel tryNextMenu = new JPanel();
         tryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
         tryNextMenu.setLayout(new BoxLayout(tryNextMenu, BoxLayout.Y_AXIS));
-        label = new JLabel("Try Next Restaurants!");
+        label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         tryNextMenu.add(label);
-        List<JButton> browseButtons = createTryNextButtons();
-        for (JButton btn : browseButtons) {
+        JLabel label2 = new JLabel("Try Next Restaurants!");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tryNextMenu.add(label2);
+        List<JButton> tryNextButtons = createTryNextButtons();
+        for (JButton btn : tryNextButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             tryNextMenu.add(btn);
         }
@@ -572,7 +591,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
                 if (trynext.hasNothing()) {
                     label.setText("Your Try Next list is currently empty");
                 } else {
-//                    displayRemoveFromTryNextMenu();
+                    displayRemoveFromTryNextMenu();
                 }
             }
         };
@@ -635,10 +654,10 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             btn.addActionListener(addToFavouritesFromTryNextAL(r.getName()));
             buttonList.add(btn);
         }
-        JButton returnToBrowseMenu = new JButton("Return to Try Next Menu");
-        returnToBrowseMenu.setActionCommand("toTryNextMenu");
-        returnToBrowseMenu.addActionListener(this);
-        buttonList.add(returnToBrowseMenu);
+        JButton returnToTryNextMenu = new JButton("Return to Try Next Menu");
+        returnToTryNextMenu.setActionCommand("toTryNextMenu");
+        returnToTryNextMenu.addActionListener(this);
+        buttonList.add(returnToTryNextMenu);
         return buttonList;
     }
 
@@ -663,7 +682,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         JPanel addRatingMenu = new JPanel();
         addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
         addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
-        label = new JLabel("Please give a rating from 1 - 10 for " + name);
+        label = new JLabel("Please give a rating from 0 - 10 for " + name);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         addRatingMenu.add(label);
         field = new JTextField();
@@ -696,6 +715,346 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
                 }
             }
         };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next remove from try next page of the application
+    public void displayRemoveFromTryNextMenu() {
+        JPanel removeFromTryNextMenu = new JPanel();
+        removeFromTryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        removeFromTryNextMenu.setLayout(new BoxLayout(removeFromTryNextMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeFromTryNextMenu.add(label);
+        JLabel label2 = new JLabel("Select a restaurant to move to Favourites List :");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeFromTryNextMenu.add(label2);
+        List<JButton> removeFromTryNextButtons = createRemoveFromTryNextButtons();
+        for (JButton btn : removeFromTryNextButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            removeFromTryNextMenu.add(btn);
+        }
+        displayPanel(removeFromTryNextMenu);
+    }
+
+    // EFFECTS: creates list of JButtons used in the try next remove from try next menu and returns it
+    public List<JButton> createRemoveFromTryNextButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : trynext.getTryNextRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(removeRestaurantFromTryNextAL(r.getName()));
+            buttonList.add(btn);
+        }
+        JButton returnToTryNextMenu = new JButton("Return to Try Next Menu");
+        returnToTryNextMenu.setActionCommand("toTryNextMenu");
+        returnToTryNextMenu.addActionListener(this);
+        buttonList.add(returnToTryNextMenu);
+        return buttonList;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates the action listener for removing restaurant in remove from try next menu and returns it
+    public ActionListener removeRestaurantFromTryNextAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                trynext.removeTryNextRestaurant(name);
+                displayRemoveFromTryNextMenu();
+                label.setText(name + " has been removed from Try Next List");
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the favourites menu page of the application
+    public void displayFavouritesMenu() {
+        JPanel favouritesMenu = new JPanel();
+        favouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        favouritesMenu.setLayout(new BoxLayout(favouritesMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        favouritesMenu.add(label);
+        JLabel label2 = new JLabel("Favourite Restaurants!");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        favouritesMenu.add(label2);
+        List<JButton> favouritesButtons = createFavouritesButtons();
+        for (JButton btn : favouritesButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            favouritesMenu.add(btn);
+        }
+        displayPanel(favouritesMenu);
+    }
+
+    // EFFECTS: creates list of JButtons used in the favourites menu and returns it
+    public List<JButton> createFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        JButton viewAllBtn = new JButton("View all Favourite restaurants");
+        viewAllBtn.addActionListener(viewAllFavouritesAL());
+        JButton editRatingsBtn = new JButton("Edit Ratings");
+        editRatingsBtn.addActionListener(editFavouriteRatingsAL());
+        JButton removeFromFavouritesBtn = new JButton("Remove from Favourites List");
+        removeFromFavouritesBtn.addActionListener(removeFromFavouritesAL());
+        JButton returnToMainMenu = new JButton("Return to Main Menu");
+        returnToMainMenu.setActionCommand("toMainMenu");
+        returnToMainMenu.addActionListener(this);
+        buttonList.add(viewAllBtn);
+        buttonList.add(editRatingsBtn);
+        buttonList.add(removeFromFavouritesBtn);
+        buttonList.add(returnToMainMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for viewAllBtn in favourites menu and returns it
+    public ActionListener viewAllFavouritesAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favourites.hasNothing()) {
+                    label.setText("Your Favourites list is currently empty");
+                } else {
+                    displayViewAllFavouriteRestaurants();
+                }
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for editRatingsBtn in favourites menu and returns it
+    public ActionListener editFavouriteRatingsAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favourites.hasNothing()) {
+                    label.setText("Your Favourites list is currently empty");
+                } else {
+                    displayEditRatingsMenu();
+                }
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for removeFromFavouritesBtn in favourites menu and returns it
+    public ActionListener removeFromFavouritesAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favourites.hasNothing()) {
+                    label.setText("Your Favourites list is currently empty");
+                } else {
+                    displayRemoveFavouritesMenu();
+                }
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the favourites view all menu page of the application
+    public void displayViewAllFavouriteRestaurants() {
+        JPanel viewAllFavouritesMenu = new JPanel();
+        viewAllFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        viewAllFavouritesMenu.setLayout(new BoxLayout(viewAllFavouritesMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Here are your Favourite Restaurants :");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewAllFavouritesMenu.add(label);
+        List<JButton> favouritesButtons = createViewAllFavouritesButtons();
+        for (JButton btn : favouritesButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            viewAllFavouritesMenu.add(btn);
+        }
+        displayPanel(viewAllFavouritesMenu);
+    }
+
+    // EFFECTS: creates list of JButtons used in the favourites view all menu and returns it
+    public List<JButton> createViewAllFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : favourites.getFavouriteRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(viewAllFavouriteRestaurantAL(r.getName(), r.getLocation(), r.getCuisine(),
+                    r.getRating()));
+            buttonList.add(btn);
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Favourites Menu");
+        returnToBrowseMenu.setActionCommand("toFavouritesMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for  in favourites menu and returns it
+    public ActionListener viewAllFavouriteRestaurantAL(String name, String location, String cuisine, int rating) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                label.setText(name + "\n \t Address : " + location + "\n \t Cusine : " + cuisine
+                        + "\n \t Rating : " + rating);
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the favourites edit ratings menu page of the application
+    public void displayEditRatingsMenu() {
+        JPanel editRatingsMenu = new JPanel();
+        editRatingsMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        editRatingsMenu.setLayout(new BoxLayout(editRatingsMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editRatingsMenu.add(label);
+        JLabel label2 = new JLabel("Which rating do you want to edit?");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editRatingsMenu.add(label2);
+        List<JButton> favouritesButtons = createEditFavouritesButtons();
+        for (JButton btn : favouritesButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            editRatingsMenu.add(btn);
+        }
+        displayPanel(editRatingsMenu);
+    }
+
+    // EFFECTS: creates list of JButtons used in the favourites edit menu and returns it
+    public List<JButton> createEditFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : favourites.getFavouriteRestaurants()) {
+            JButton btn = new JButton(r.getName() + "\t , Rating : " + r.getRating());
+            btn.addActionListener(editFavouriteRestaurantsAL(r.getName(), r.getRating()));
+            buttonList.add(btn);
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Favourites Menu");
+        returnToBrowseMenu.setActionCommand("toFavouritesMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for buttons in favourites edit menu and returns it
+    public ActionListener editFavouriteRestaurantsAL(String name, int rating) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayEditingRatingsMenu(name, rating);
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel when editing restaurant ratings in favourites menu
+    public void displayEditingRatingsMenu(String name, int rating) {
+        JPanel editRatingMenu = new JPanel();
+        editRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        editRatingMenu.setLayout(new BoxLayout(editRatingMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Current rating for " + name + " is : " + rating
+                + ". Please enter new rating from 0 - 10");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editRatingMenu.add(label);
+        field = new JTextField();
+        field.setMaximumSize(new Dimension(100, 35));
+        editRatingMenu.add(field);
+        JButton setRatingBtn = new JButton("Set Rating");
+        setRatingBtn.addActionListener(setRatingFromFavouritesAL(name));
+        setRatingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        editRatingMenu.add(setRatingBtn);
+        displayPanel(editRatingMenu);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates action listener for setRatingBtn in favourites edit ratings menu
+    //          changes the rating of the selected restaurant to the new rating inputted into text field
+    public ActionListener setRatingFromFavouritesAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rating = Integer.parseInt(field.getText());
+                Restaurant r = browse.getRestaurant(browse.searchBrowseRestaurants(name));
+                if ((0 <= rating) && (rating <= 10)) {
+                    r.setRating(rating);
+                    displayEditRatingsMenu();
+                    label.setText(name + "'s rating has been changed to " + rating);
+                } else {
+                    displayEditRatingsMenu();
+                    label.setText("Rating invalid, please try again");
+                }
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel to remove favourite restaurants in the favourites menu
+    public void displayRemoveFavouritesMenu() {
+        JPanel removeFromFavouritesMenu = new JPanel();
+        removeFromFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        removeFromFavouritesMenu.setLayout(new BoxLayout(removeFromFavouritesMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeFromFavouritesMenu.add(label);
+        JLabel label2 = new JLabel("Select a restaurant to move to Favourites List :");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        removeFromFavouritesMenu.add(label2);
+        List<JButton> removeFromFavouritesButtons = createRemoveFromFavouritesButtons();
+        for (JButton btn : removeFromFavouritesButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            removeFromFavouritesMenu.add(btn);
+        }
+        displayPanel(removeFromFavouritesMenu);
+    }
+
+    // EFFECTS: creates list of JButtons used in remove from favourites menu in favourites menu
+    public List<JButton> createRemoveFromFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : favourites.getFavouriteRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(removeRestaurantFromFavouritesAL(r.getName()));
+            buttonList.add(btn);
+        }
+        JButton returnToTryNextMenu = new JButton("Return to Favourites Menu");
+        returnToTryNextMenu.setActionCommand("toFavouritesMenu");
+        returnToTryNextMenu.addActionListener(this);
+        buttonList.add(returnToTryNextMenu);
+        return buttonList;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates action listener for removeFromFavouritesBtn and returns it
+    public ActionListener removeRestaurantFromFavouritesAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = favourites.searchFavourites(name);
+                favourites.getFavRestaurant(index).setRating(-1);
+                favourites.removeFavourite(index);
+                displayRemoveFavouritesMenu();
+                label.setText(name + " has been removed from Favourites List");
+            }
+        };
+    }
+
+    // EFFECTS: saves trynext list and favourites list to separate files
+    public void saveBothRestaurantLists() {
+        try {
+            jsonWriterTryNext.open();
+            jsonWriterTryNext.writeTryNext(trynext);
+            jsonWriterTryNext.close();
+            jsonWriterFavourites.open();
+            jsonWriterFavourites.writeFavourites(favourites);
+            jsonWriterFavourites.close();
+            System.out.println("Saved Try Next list to " + JSON_TRY_NEXT);
+            System.out.println("Saved Favourites list to " + JSON_FAVOURITES);
+        } catch (FileNotFoundException e) {
+            System.out.println("Failed to write file");
+        }
+        displayMainMenu();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads trynext list and favourites list from their respective files
+    public void loadBothRestaurantLists() {
+        try {
+            trynext = jsonReader.readTryNext(JSON_TRY_NEXT);
+            favourites = jsonReader.readFavourites(JSON_FAVOURITES);
+            System.out.println("Try Next list has been loaded from " + JSON_TRY_NEXT);
+            System.out.println("Favourites list has been loaded from " + JSON_FAVOURITES);
+        } catch (IOException e) {
+            System.out.println("Failed to read file");
+        }
+        displayMainMenu();
     }
 
 }

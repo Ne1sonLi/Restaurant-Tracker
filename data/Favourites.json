@@ -1,9 +1,17 @@
 {
       "name": "Favourites List",
-      "restaurants": [{
-            "name": "Chung Chun",
-            "rating": 9,
-            "cuisine": "Korean",
-            "location": "6020 No. 3 R"
-      }]
+      "restaurants": [
+            {
+                  "name": "Deer Garden",
+                  "rating": 10,
+                  "cuisine": "Chinese",
+                  "location": "8580 Alexandra Rd. #2015"
+            },
+            {
+                  "name": "Sushi Mura",
+                  "rating": 8,
+                  "cuisine": "Japanese",
+                  "location": "5508 Hollybridge Way #115"
+            }
+      ]
 }

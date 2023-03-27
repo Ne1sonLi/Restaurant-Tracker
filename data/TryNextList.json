@@ -1,9 +1,17 @@
 {
       "name": "Try Next List",
-      "restaurants": [{
-            "name": "Miku",
-            "rating": -1,
-            "cuisine": "Japanese",
-            "location": "200 Granville St. #70"
-      }]
+      "restaurants": [
+            {
+                  "name": "Sushi Mura",
+                  "rating": 8,
+                  "cuisine": "Japanese",
+                  "location": "5508 Hollybridge Way #115"
+            },
+            {
+                  "name": "Sura",
+                  "rating": -1,
+                  "cuisine": "Korean",
+                  "location": "4151 Hazelbridge Way #1830"
+            }
+      ]
 }
