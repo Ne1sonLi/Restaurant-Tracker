@@ -19,8 +19,6 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     private List<Restaurant> filtered;
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
-    private JPanel mainMenu;
-    private JPanel browseMenu;
     private JLabel label;
 
     // EFFECTS: runs the graphical user interface application
@@ -35,7 +33,6 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         displayMainMenu();
     }
 
-
     // EFFECTS: performs actions involving saving, loading, and returning to previous menus
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -45,6 +42,10 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             label.setText("Loaded Try Next & Favourites Lists!");
         } else if (e.getActionCommand().equals("toMainMenu")) {
             displayMainMenu();
+        } else if (e.getActionCommand().equals("toBrowseMenu")) {
+            displayBrowseMenu();
+        } else if (e.getActionCommand().equals("toFilterMenu")) {
+            displayFilterMenu();
         }
 
     }
@@ -87,7 +88,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // MODIFIES: this
     // EFFECTS: creates a panel for the main menu page of the application
     public void displayMainMenu() {
-        mainMenu = new JPanel();
+        JPanel mainMenu = new JPanel();
         mainMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
         mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Welcome to the Main Menu!");
@@ -139,7 +140,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //displayTryNextMenu();
+                displayTryNextMenu();
             }
         };
     }
@@ -157,7 +158,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // MODIFIES: this
     // EFFECTS: creates a panel for the browse menu page of the application
     public void displayBrowseMenu() {
-        browseMenu = new JPanel();
+        JPanel browseMenu = new JPanel();
         browseMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
         browseMenu.setLayout(new BoxLayout(browseMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Browse the restaurants!");
@@ -174,15 +175,175 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a list of JButtons used in the browse menu and returns it
     public List<JButton> createBrowseButtons() {
         List<JButton> buttonList = new ArrayList<>();
+        JButton viewAllBtn = new JButton("View All Restaurants");
+        viewAllBtn.addActionListener(viewAllAL());
+        JButton filterBtn = new JButton("Filter Restaurants");
+        filterBtn.addActionListener(filterAL());
+        JButton addToTryNextBtn = new JButton("Add to Try Next");
+        addToTryNextBtn.addActionListener(addToTryNextAL());
+        JButton addToFavouritesBtn = new JButton("Add to Favourites");
+        addToFavouritesBtn.addActionListener(addToFavouritesAL());
+        JButton returnToMainMenu = new JButton("Return to Main Menu");
+        returnToMainMenu.setActionCommand("toMainMenu");
+        returnToMainMenu.addActionListener(this);
+        buttonList.add(viewAllBtn);
+        buttonList.add(filterBtn);
+        buttonList.add(addToTryNextBtn);
+        buttonList.add(addToFavouritesBtn);
+        buttonList.add(returnToMainMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for viewALLBtn in browse menu and returns it
+    public ActionListener viewAllAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayViewAllRestaurants();
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for filterBtn in browse menu and returns it
+    public ActionListener filterAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayFilterMenu();
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for addToTryNextBtn in main menu and returns it
+    public ActionListener addToTryNextAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                displayAddToTryNextMenu();
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for addToFavouritesBtn in main menu and returns it
+    public ActionListener addToFavouritesAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                displayAddToFavouritesMenu();
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the browse filter menu page of the application
+    public void displayFilterMenu() {
+        JPanel filterMenu = new JPanel();
+        filterMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        filterMenu.setLayout(new BoxLayout(filterMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Select a cuisine!");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        filterMenu.add(label);
+        List<JButton> cusineButtons = createCuisineButtons();
+        for (JButton btn : cusineButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            filterMenu.add(btn);
+        }
+        displayPanel(filterMenu);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the browse filter menu and returns it
+    public List<JButton> createCuisineButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        JButton japaneseBtn = new JButton("Japanese");
+        JButton koreanBtn = new JButton("Korean");
+        JButton chineseBtn = new JButton("Chinese");
+        JButton hotpotBtn = new JButton("Hotpot");
+        buttonList.add(japaneseBtn);
+        buttonList.add(koreanBtn);
+        buttonList.add(chineseBtn);
+        buttonList.add(hotpotBtn);
+        for (JButton btn : buttonList) {
+            btn.addActionListener(cuisineAL(btn.getText()));
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Browse Menu");
+        returnToBrowseMenu.setActionCommand("toBrowseMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for given cuisine in filter menu and returns it
+    public ActionListener cuisineAL(String cuisine) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayFilteredRestaurants(cuisine);
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the restaurants filtered by a cuisine
+    public void displayFilteredRestaurants(String cuisine) {
+        filtered = browse.filterByCuisine(cuisine);
+        JPanel filteredRestaurants = new JPanel();
+        filteredRestaurants.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        filteredRestaurants.setLayout(new BoxLayout(filteredRestaurants, BoxLayout.Y_AXIS));
+        label = new JLabel("Here are all the " + cuisine + " restaurants!");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        filteredRestaurants.add(label);
+        List<JButton> browseButtons = createFilteredButtons();
+        for (JButton btn : browseButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            filteredRestaurants.add(btn);
+        }
+        displayPanel(filteredRestaurants);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the filtered restaurants menu and returns it
+    public List<JButton> createFilteredButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : filtered) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
+            buttonList.add(btn);
+        }
+        JButton returnToMainMenu = new JButton("Return to Filter Menu");
+        returnToMainMenu.setActionCommand("toFilterMenu");
+        returnToMainMenu.addActionListener(this);
+        buttonList.add(returnToMainMenu);
+        return buttonList;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the browse menu page of the application
+    public void displayViewAllRestaurants() {
+        JPanel viewAll = new JPanel();
+        viewAll.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        viewAll.setLayout(new BoxLayout(viewAll, BoxLayout.Y_AXIS));
+        label = new JLabel("Here are all the restaurants!");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        viewAll.add(label);
+        List<JButton> browseButtons = createViewAllButtons();
+        for (JButton btn : browseButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            viewAll.add(btn);
+        }
+        displayPanel(viewAll);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the view all menu and returns it
+    public List<JButton> createViewAllButtons() {
+        List<JButton> buttonList = new ArrayList<>();
         for (Restaurant r : browse.getBrowseRestaurants()) {
             JButton btn = new JButton(r.getName());
             btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
             buttonList.add(btn);
         }
-        JButton returnToMainMenu = new JButton("Return to Main Menu");
-        returnToMainMenu.setActionCommand("toMainMenu");
-        returnToMainMenu.addActionListener(this);
-        buttonList.add(returnToMainMenu);
+        JButton returnToBrowseMenu = new JButton("Return to Browse Menu");
+        returnToBrowseMenu.setActionCommand("toBrowseMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
         return buttonList;
     }
 
@@ -195,5 +356,12 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             }
         };
     }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next menu page of the application
+    public void displayTryNextMenu() {
+
+    }
+
 
 }
