@@ -62,6 +62,11 @@ public class FavouriteRestaurants {
         return favourites.get(index);
     }
 
+    // EFFECTS: returns a list of restaurants in favourites collection
+    public List<Restaurant> getFavouriteRestaurants() {
+        return favourites;
+    }
+
     // REQUIRES: 0 <= index < getNumRestaurants()
     // MODIFIES: this
     // EFFECTS: removes a favourite restaurant in the list at the given index number

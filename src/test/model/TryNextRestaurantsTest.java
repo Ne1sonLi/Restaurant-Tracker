@@ -28,6 +28,18 @@ public class TryNextRestaurantsTest {
     }
 
     @Test
+    public void testGetRetaurants() {
+        trynext.addTryNext(r1);
+        trynext.addTryNext(r2);
+        trynext.addTryNext(r3);
+        assertFalse(trynext.getTryNextRestaurants().isEmpty());
+        assertEquals(3, trynext.getTryNextRestaurants().size());
+        assertEquals(r1, trynext.getTryNextRestaurants().get(0));
+        assertEquals(r2, trynext.getTryNextRestaurants().get(1));
+        assertEquals(r3, trynext.getTryNextRestaurants().get(2));
+    }
+
+    @Test
     public void testAddTryNextRestaurantsOnce() {
         trynext.addTryNext(r1);
         assertFalse(trynext.hasNothing());

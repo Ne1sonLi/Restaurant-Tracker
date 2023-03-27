@@ -27,6 +27,18 @@ public class FavouriteRestaurantsTest {
     }
 
     @Test
+    public void testGetRestaurants() {
+        favourites.addFavourite(r1);
+        favourites.addFavourite(r2);
+        favourites.addFavourite(r3);
+        assertFalse(favourites.getFavouriteRestaurants().isEmpty());
+        assertEquals(3, favourites.getFavouriteRestaurants().size());
+        assertEquals(r1, favourites.getFavouriteRestaurants().get(0));
+        assertEquals(r2, favourites.getFavouriteRestaurants().get(1));
+        assertEquals(r3, favourites.getFavouriteRestaurants().get(2));
+    }
+
+    @Test
     public void testAddFavouriteOneRestaurant() {
         favourites.addFavourite(r1);
         assertEquals(1, favourites.getNumRestaurants());

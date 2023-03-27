@@ -53,6 +53,7 @@ public class BrowseRestaurants {
         return browseRestaurants.get(index);
     }
 
+    // EFFECTS: returns a list of restaurants in the browse collection
     public List<Restaurant> getBrowseRestaurants() {
         return browseRestaurants;
     }

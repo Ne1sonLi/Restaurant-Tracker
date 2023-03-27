@@ -47,6 +47,8 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             displayBrowseMenu();
         } else if (e.getActionCommand().equals("toFilterMenu")) {
             displayFilterMenu();
+        } else if (e.getActionCommand().equals("toTryNextMenu")) {
+            displayTryNextMenu();
         }
 
     }
@@ -141,7 +143,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                displayTryNextMenu();
+                displayTryNextMenu();
             }
         };
     }
@@ -443,7 +445,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return buttonList;
     }
 
-    // EFFECTS: creates action listener for restaurant in browse add try next menu and returns it
+    // EFFECTS: creates action listener for restaurant in browse add to favourites menu and returns it
     //          adds restaurant with given name to favourites list if not already in it
     public ActionListener addToFavouritesFromBrowseAL(String name) {
         return new ActionListener() {
@@ -471,7 +473,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         field.setMaximumSize(new Dimension(100, 35));
         addRatingMenu.add(field);
         JButton setRatingBtn = new JButton("Set Rating");
-        setRatingBtn.addActionListener(setRatingAL(name));
+        setRatingBtn.addActionListener(setRatingFromBrowseAL(name));
         setRatingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         addRatingMenu.add(setRatingBtn);
         displayPanel(addRatingMenu);
@@ -479,7 +481,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: creates the action listener for set rating button and returns it
-    public ActionListener setRatingAL(String name) {
+    public ActionListener setRatingFromBrowseAL(String name) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -498,5 +500,202 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         };
     }
 
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next menu page of the application
+    public void displayTryNextMenu() {
+        JPanel tryNextMenu = new JPanel();
+        tryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        tryNextMenu.setLayout(new BoxLayout(tryNextMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Try Next Restaurants!");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tryNextMenu.add(label);
+        List<JButton> browseButtons = createTryNextButtons();
+        for (JButton btn : browseButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            tryNextMenu.add(btn);
+        }
+        displayPanel(tryNextMenu);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the try next menu and returns it
+    public List<JButton> createTryNextButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        JButton viewAllBtn = new JButton("View all Try Next restaurants");
+        viewAllBtn.addActionListener(viewAllTryNextAL());
+        JButton moveToFavouritesBtn = new JButton("Move to Favourites List");
+        moveToFavouritesBtn.addActionListener(moveToFavouritesAL());
+        JButton removeFromTryNextBtn = new JButton("Remove from Try Next List");
+        removeFromTryNextBtn.addActionListener(removeFromTryNextAL());
+        JButton returnToMainMenu = new JButton("Return to Main Menu");
+        returnToMainMenu.setActionCommand("toMainMenu");
+        returnToMainMenu.addActionListener(this);
+        buttonList.add(viewAllBtn);
+        buttonList.add(moveToFavouritesBtn);
+        buttonList.add(removeFromTryNextBtn);
+        buttonList.add(returnToMainMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for viewAllBtn in try next menu and returns it
+    public ActionListener viewAllTryNextAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (trynext.hasNothing()) {
+                    label.setText("Your Try Next list is currently empty");
+                } else {
+                    displayTryNextRestaurants();
+                }
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for moveToFavouritesBtn in try next menu and returns it
+    public ActionListener moveToFavouritesAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (trynext.hasNothing()) {
+                    label.setText("Your Try Next list is currently empty");
+                } else {
+                    displayMoveToFavouritesMenu();
+                }
+            }
+        };
+    }
+
+    // EFFECTS: creates action listener for removeFromTryNextBtn in try next menu and returns it
+    public ActionListener removeFromTryNextAL() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (trynext.hasNothing()) {
+                    label.setText("Your Try Next list is currently empty");
+                } else {
+//                    displayRemoveFromTryNextMenu();
+                }
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next view all page of the application
+    public void displayTryNextRestaurants() {
+        JPanel tryNextViewAll = new JPanel();
+        tryNextViewAll.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        tryNextViewAll.setLayout(new BoxLayout(tryNextViewAll, BoxLayout.Y_AXIS));
+        label = new JLabel("Here are the restaurants you want to Try Next :");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tryNextViewAll.add(label);
+        List<JButton> viewAllButtons = createTryNextViewAllButtons();
+        for (JButton btn : viewAllButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            tryNextViewAll.add(btn);
+        }
+        displayPanel(tryNextViewAll);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the try next view all menu and returns it
+    public List<JButton> createTryNextViewAllButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : trynext.getTryNextRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
+            buttonList.add(btn);
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Try Next Menu");
+        returnToBrowseMenu.setActionCommand("toTryNextMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next move to favourites page of the application
+    public void displayMoveToFavouritesMenu() {
+        JPanel moveToFavouritesMenu = new JPanel();
+        moveToFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        moveToFavouritesMenu.setLayout(new BoxLayout(moveToFavouritesMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Select a restaurant to move to Favourites List :");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        moveToFavouritesMenu.add(label);
+        List<JButton> viewAllButtons = createMoveToFavouritesButtons();
+        for (JButton btn : viewAllButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            moveToFavouritesMenu.add(btn);
+        }
+        displayPanel(moveToFavouritesMenu);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the try next move to favourites menu and returns it
+    public List<JButton> createMoveToFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : trynext.getTryNextRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(addToFavouritesFromTryNextAL(r.getName()));
+            buttonList.add(btn);
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Try Next Menu");
+        returnToBrowseMenu.setActionCommand("toTryNextMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for restaurant in try next move to favourites menu and returns it
+    //          adds restaurant with given name to favourites list if not already in it
+    public ActionListener addToFavouritesFromTryNextAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favourites.containsFavouriteRestaurant(name)) {
+                    label.setText(name + " is already in your Favourites List!");
+                } else {
+                    displayAddRatingMenuFromTryNext(name);
+                }
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the try next set rating page of the application
+    public void displayAddRatingMenuFromTryNext(String name) {
+        JPanel addRatingMenu = new JPanel();
+        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Please give a rating from 1 - 10 for " + name);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addRatingMenu.add(label);
+        field = new JTextField();
+        field.setMaximumSize(new Dimension(100, 35));
+        addRatingMenu.add(field);
+        JButton setRatingBtn = new JButton("Set Rating");
+        setRatingBtn.addActionListener(setRatingFromTryNextAL(name));
+        setRatingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addRatingMenu.add(setRatingBtn);
+        displayPanel(addRatingMenu);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates the action listener for set rating button from try next menu and returns it
+    public ActionListener setRatingFromTryNextAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rating = Integer.parseInt(field.getText());
+                Restaurant r = browse.getRestaurant(browse.searchBrowseRestaurants(name));
+                if ((0 <= rating) && (rating <= 10)) {
+                    r.setRating(rating);
+                    favourites.addFavourite(r);
+                    trynext.removeTryNextRestaurant(name);
+                    displayMoveToFavouritesMenu();
+                    label.setText(name + " has been added to Favourites List!");
+                } else {
+                    displayMoveToFavouritesMenu();
+                    label.setText("Rating invalid, please try again");
+                }
+            }
+        };
+    }
 
 }

@@ -35,6 +35,11 @@ public class TryNextRestaurants {
         return trynext.get(index);
     }
 
+    // EFFECTS: returns a list of restaurants in trynext collection
+    public List<Restaurant> getTryNextRestaurants() {
+        return trynext;
+    }
+
     // EFFECTS: return true is restaurant name is in try next list
     public boolean containsTryNextRestaurant(String name) {
         for (Restaurant r : trynext) {
