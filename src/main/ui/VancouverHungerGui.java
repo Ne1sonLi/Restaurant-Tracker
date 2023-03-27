@@ -20,6 +20,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
     private JLabel label;
+    private JTextField field;
 
     // EFFECTS: runs the graphical user interface application
     public VancouverHungerGui() {
@@ -229,7 +230,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-//                displayAddToFavouritesMenu();
+                displayAddToFavouritesMenu();
             }
         };
     }
@@ -243,8 +244,8 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         label = new JLabel("Here are all the restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewAll.add(label);
-        List<JButton> browseButtons = createViewAllButtons();
-        for (JButton btn : browseButtons) {
+        List<JButton> viewAllButtons = createViewAllButtons();
+        for (JButton btn : viewAllButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             viewAll.add(btn);
         }
@@ -334,8 +335,8 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         label = new JLabel("Here are all the " + cuisine + " restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         filteredRestaurants.add(label);
-        List<JButton> browseButtons = createFilteredButtons();
-        for (JButton btn : browseButtons) {
+        List<JButton> filteredButtons = createFilteredButtons();
+        for (JButton btn : filteredButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             filteredRestaurants.add(btn);
         }
@@ -366,8 +367,8 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         label = new JLabel("Select a restaurant to add to Try Next List");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         addToTryNext.add(label);
-        List<JButton> browseButtons = createAddToTryNextButtons();
-        for (JButton btn : browseButtons) {
+        List<JButton> tryNextButtons = createAddToTryNextButtons();
+        for (JButton btn : tryNextButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             addToTryNext.add(btn);
         }
@@ -389,7 +390,9 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return buttonList;
     }
 
+    // MODIFIES: this
     // EFFECTS: creates action listener for restaurant in browse add try next menu and returns it
+    //          adds restaurant with given name to try next list if not already in it
     public ActionListener addToTryNextFromBrowseAL(String name) {
         return new ActionListener() {
             @Override
@@ -404,5 +407,96 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             }
         };
     }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the browse add to favourites page of the application
+    public void displayAddToFavouritesMenu() {
+        JPanel addToFavourites = new JPanel();
+        addToFavourites.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addToFavourites.setLayout(new BoxLayout(addToFavourites, BoxLayout.Y_AXIS));
+        label = new JLabel("");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addToFavourites.add(label);
+        JLabel label2 = new JLabel("Select a restaurant to add to Favourites list");
+        label2.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addToFavourites.add(label2);
+        List<JButton> favouritesButtons = createAddToFavouritesButtons();
+        for (JButton btn : favouritesButtons) {
+            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+            addToFavourites.add(btn);
+        }
+        displayPanel(addToFavourites);
+    }
+
+    // EFFECTS: creates a list of JButtons used in the browse add to favourites menu and returns it
+    public List<JButton> createAddToFavouritesButtons() {
+        List<JButton> buttonList = new ArrayList<>();
+        for (Restaurant r : browse.getBrowseRestaurants()) {
+            JButton btn = new JButton(r.getName());
+            btn.addActionListener(addToFavouritesFromBrowseAL(r.getName()));
+            buttonList.add(btn);
+        }
+        JButton returnToBrowseMenu = new JButton("Return to Browse Menu");
+        returnToBrowseMenu.setActionCommand("toBrowseMenu");
+        returnToBrowseMenu.addActionListener(this);
+        buttonList.add(returnToBrowseMenu);
+        return buttonList;
+    }
+
+    // EFFECTS: creates action listener for restaurant in browse add try next menu and returns it
+    //          adds restaurant with given name to favourites list if not already in it
+    public ActionListener addToFavouritesFromBrowseAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (favourites.containsFavouriteRestaurant(name)) {
+                    label.setText(name + " is already in your Favourites List!");
+                } else {
+                    displayAddRatingMenu(name);
+                }
+            }
+        };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates a panel for the browse set rating page of the application
+    public void displayAddRatingMenu(String name) {
+        JPanel addRatingMenu = new JPanel();
+        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
+        label = new JLabel("Please give a rating from 1 - 10 for " + name);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addRatingMenu.add(label);
+        field = new JTextField();
+        field.setMaximumSize(new Dimension(100, 35));
+        addRatingMenu.add(field);
+        JButton setRatingBtn = new JButton("Set Rating");
+        setRatingBtn.addActionListener(setRatingAL(name));
+        setRatingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        addRatingMenu.add(setRatingBtn);
+        displayPanel(addRatingMenu);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates the action listener for set rating button and returns it
+    public ActionListener setRatingAL(String name) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rating = Integer.parseInt(field.getText());
+                Restaurant r = browse.getRestaurant(browse.searchBrowseRestaurants(name));
+                if ((0 <= rating) && (rating <= 10)) {
+                    r.setRating(rating);
+                    favourites.addFavourite(r);
+                    displayAddToFavouritesMenu();
+                    label.setText(name + " has been added to Favourites List!");
+                } else {
+                    displayAddToFavouritesMenu();
+                    label.setText("Rating invalid, please try again");
+                }
+            }
+        };
+    }
+
 
 }
