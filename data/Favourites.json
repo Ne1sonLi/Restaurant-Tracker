@@ -2,16 +2,28 @@
       "name": "Favourites List",
       "restaurants": [
             {
+                  "name": "Dolar Shop",
+                  "rating": 9,
+                  "cuisine": "Hotpot",
+                  "location": "5300 No. 3 Rd."
+            },
+            {
                   "name": "Deer Garden",
-                  "rating": 10,
+                  "rating": 9,
                   "cuisine": "Chinese",
                   "location": "8580 Alexandra Rd. #2015"
             },
             {
-                  "name": "Sushi Mura",
-                  "rating": 8,
-                  "cuisine": "Japanese",
-                  "location": "5508 Hollybridge Way #115"
+                  "name": "Shanghai River",
+                  "rating": 7,
+                  "cuisine": "Chinese",
+                  "location": "7831 Westminster Hwy"
+            },
+            {
+                  "name": "Sura",
+                  "rating": 6,
+                  "cuisine": "Korean",
+                  "location": "4151 Hazelbridge Way #1830"
             }
       ]
 }

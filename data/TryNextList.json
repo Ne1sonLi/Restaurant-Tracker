@@ -2,16 +2,16 @@
       "name": "Try Next List",
       "restaurants": [
             {
-                  "name": "Sushi Mura",
-                  "rating": 8,
-                  "cuisine": "Japanese",
-                  "location": "5508 Hollybridge Way #115"
+                  "name": "Deer Garden",
+                  "rating": 9,
+                  "cuisine": "Chinese",
+                  "location": "8580 Alexandra Rd. #2015"
             },
             {
-                  "name": "Sura",
+                  "name": "Chicko Chicken",
                   "rating": -1,
                   "cuisine": "Korean",
-                  "location": "4151 Hazelbridge Way #1830"
+                  "location": "4328 No. 3 Rd. #135"
             }
       ]
 }

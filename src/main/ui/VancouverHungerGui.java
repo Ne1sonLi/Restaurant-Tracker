@@ -21,7 +21,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
 
     private static final String JSON_TRY_NEXT = "./data/TryNextList.json";
     private static final String JSON_FAVOURITES = "./data/Favourites.json";
-    private BrowseRestaurants browse;
+    private final BrowseRestaurants browse;
     private List<Restaurant> filtered;
     private TryNextRestaurants trynext;
     private FavouriteRestaurants favourites;
@@ -35,7 +35,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     public VancouverHungerGui() {
         super("Vancouver Hunger");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(700, 700));
+        this.setPreferredSize(new Dimension(750, 700));
         browse = new BrowseRestaurants();
         trynext = new TryNextRestaurants();
         favourites = new FavouriteRestaurants();
@@ -44,29 +44,6 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         jsonReader = new JsonReader();
         initializeRestaurants();
         displayMainMenu();
-    }
-
-    // EFFECTS: performs actions involving saving, loading, and returning to previous menus
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("save")) {
-            saveBothRestaurantLists();
-            label.setText("Saved Try Next & Favourites Lists!");
-        } else if (e.getActionCommand().equals("load")) {
-            loadBothRestaurantLists();
-            label.setText("Loaded Try Next & Favourites Lists!");
-        } else if (e.getActionCommand().equals("toMainMenu")) {
-            displayMainMenu();
-        } else if (e.getActionCommand().equals("toBrowseMenu")) {
-            displayBrowseMenu();
-        } else if (e.getActionCommand().equals("toFilterMenu")) {
-            displayFilterMenu();
-        } else if (e.getActionCommand().equals("toTryNextMenu")) {
-            displayTryNextMenu();
-        } else if (e.getActionCommand().equals("toFavouritesMenu")) {
-            displayFavouritesMenu();
-        }
-
     }
 
     // MODIFIES: this
@@ -94,21 +71,44 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: removes the current panel and displays the given panel
+    // EFFECTS: removes the current panel and displays the given panel that is not resizable
     public void displayPanel(JPanel panel) {
         getContentPane().removeAll();
         getContentPane().invalidate();
         getContentPane().add(panel);
         getContentPane().revalidate();
         pack();
+        setResizable(false);
         setVisible(true);
+    }
+
+    // EFFECTS: performs actions involving saving, loading, and returning to previous menus
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("save")) {
+            saveBothRestaurantLists();
+            label.setText("Saved Try Next to : " + JSON_TRY_NEXT + " & Favourites to : " + JSON_FAVOURITES);
+        } else if (e.getActionCommand().equals("load")) {
+            loadBothRestaurantLists();
+            label.setText("Loaded Try Next from : " + JSON_TRY_NEXT +  " & Favourites from : " + JSON_FAVOURITES);
+        } else if (e.getActionCommand().equals("toMainMenu")) {
+            displayMainMenu();
+        } else if (e.getActionCommand().equals("toBrowseMenu")) {
+            displayBrowseMenu();
+        } else if (e.getActionCommand().equals("toFilterMenu")) {
+            displayFilterMenu();
+        } else if (e.getActionCommand().equals("toTryNextMenu")) {
+            displayTryNextMenu();
+        } else if (e.getActionCommand().equals("toFavouritesMenu")) {
+            displayFavouritesMenu();
+        }
     }
 
     // MODIFIES: this
     // EFFECTS: creates a panel for the main menu page of the application
     public void displayMainMenu() {
         JPanel mainMenu = new JPanel();
-        mainMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        mainMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         mainMenu.setLayout(new BoxLayout(mainMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Welcome to the Main Menu!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -118,6 +118,10 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             mainMenu.add(btn);
         }
+        JLabel mainMenuImg = new JLabel();
+        mainMenuImg.setIcon(new ImageIcon("data/mainMenuImage.jpg"));
+        mainMenuImg.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainMenu.add(mainMenuImg);
         displayPanel(mainMenu);
     }
 
@@ -178,7 +182,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the browse menu page of the application
     public void displayBrowseMenu() {
         JPanel browseMenu = new JPanel();
-        browseMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        browseMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         browseMenu.setLayout(new BoxLayout(browseMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Browse the restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -218,7 +222,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                displayViewAllRestaurants();
+                displayBrowseViewAllRestaurants();
             }
         };
     }
@@ -255,14 +259,14 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: creates a panel for the browse view all page of the application
-    public void displayViewAllRestaurants() {
+    public void displayBrowseViewAllRestaurants() {
         JPanel viewAll = new JPanel();
-        viewAll.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        viewAll.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         viewAll.setLayout(new BoxLayout(viewAll, BoxLayout.Y_AXIS));
         label = new JLabel("Here are all the restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewAll.add(label);
-        List<JButton> viewAllButtons = createViewAllButtons();
+        List<JButton> viewAllButtons = createBrowseViewAllButtons();
         for (JButton btn : viewAllButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             viewAll.add(btn);
@@ -271,11 +275,11 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     }
 
     // EFFECTS: creates a list of JButtons used in the view all menu and returns it
-    public List<JButton> createViewAllButtons() {
+    public List<JButton> createBrowseViewAllButtons() {
         List<JButton> buttonList = new ArrayList<>();
         for (Restaurant r : browse.getBrowseRestaurants()) {
             JButton btn = new JButton(r.getName());
-            btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
+            btn.addActionListener(restaurantDetailsAL(r.getName(), r.getLocation(), r.getCuisine()));
             buttonList.add(btn);
         }
         JButton returnToBrowseMenu = new JButton("Return to Browse Menu");
@@ -286,11 +290,11 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     }
 
     // EFFECTS: creates action listener for a given restaurant in the browse menu and returns it
-    public ActionListener browseRestaurantAL(String name, String location, String cuisine) {
+    public ActionListener restaurantDetailsAL(String name, String location, String cuisine) {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                label.setText(name + "\n \t Address : " + location + "\n \t Cusine : " + cuisine);
+                label.setText(name + "\n \t Address : " + location + "\n \t Cuisine : " + cuisine);
             }
         };
     }
@@ -299,13 +303,13 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the browse filter menu page of the application
     public void displayFilterMenu() {
         JPanel filterMenu = new JPanel();
-        filterMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        filterMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         filterMenu.setLayout(new BoxLayout(filterMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Select a cuisine!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         filterMenu.add(label);
-        List<JButton> cusineButtons = createCuisineButtons();
-        for (JButton btn : cusineButtons) {
+        List<JButton> cuisineButtons = createCuisineButtons();
+        for (JButton btn : cuisineButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             filterMenu.add(btn);
         }
@@ -348,7 +352,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     public void displayFilteredRestaurants(String cuisine) {
         filtered = browse.filterByCuisine(cuisine);
         JPanel filteredRestaurants = new JPanel();
-        filteredRestaurants.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        filteredRestaurants.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         filteredRestaurants.setLayout(new BoxLayout(filteredRestaurants, BoxLayout.Y_AXIS));
         label = new JLabel("Here are all the " + cuisine + " restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -366,7 +370,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         List<JButton> buttonList = new ArrayList<>();
         for (Restaurant r : filtered) {
             JButton btn = new JButton(r.getName());
-            btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
+            btn.addActionListener(restaurantDetailsAL(r.getName(), r.getLocation(), r.getCuisine()));
             buttonList.add(btn);
         }
         JButton returnToFilterMenuMenu = new JButton("Return to Filter Menu");
@@ -380,7 +384,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the browse add to try next page of the application
     public void displayAddToTryNextMenu() {
         JPanel addToTryNext = new JPanel();
-        addToTryNext.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addToTryNext.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         addToTryNext.setLayout(new BoxLayout(addToTryNext, BoxLayout.Y_AXIS));
         label = new JLabel("Select a restaurant to add to Try Next List");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -430,7 +434,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the browse add to favourites page of the application
     public void displayAddToFavouritesMenu() {
         JPanel addToFavourites = new JPanel();
-        addToFavourites.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addToFavourites.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         addToFavourites.setLayout(new BoxLayout(addToFavourites, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -480,7 +484,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the browse set rating page of the application
     public void displayAddRatingMenu(String name) {
         JPanel addRatingMenu = new JPanel();
-        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Please give a rating from 0 - 10 for " + name);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -520,7 +524,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the try next menu page of the application
     public void displayTryNextMenu() {
         JPanel tryNextMenu = new JPanel();
-        tryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        tryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         tryNextMenu.setLayout(new BoxLayout(tryNextMenu, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -561,7 +565,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (trynext.hasNothing()) {
-                    label.setText("Your Try Next list is currently empty");
+                    label.setText("Your Try Next list is currently empty!");
                 } else {
                     displayTryNextRestaurants();
                 }
@@ -575,7 +579,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (trynext.hasNothing()) {
-                    label.setText("Your Try Next list is currently empty");
+                    label.setText("Your Try Next list is currently empty!");
                 } else {
                     displayMoveToFavouritesMenu();
                 }
@@ -589,7 +593,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (trynext.hasNothing()) {
-                    label.setText("Your Try Next list is currently empty");
+                    label.setText("Your Try Next list is currently empty!");
                 } else {
                     displayRemoveFromTryNextMenu();
                 }
@@ -601,13 +605,13 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the try next view all page of the application
     public void displayTryNextRestaurants() {
         JPanel tryNextViewAll = new JPanel();
-        tryNextViewAll.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        tryNextViewAll.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         tryNextViewAll.setLayout(new BoxLayout(tryNextViewAll, BoxLayout.Y_AXIS));
-        label = new JLabel("Here are the restaurants you want to Try Next :");
+        label = new JLabel("Here are the restaurants you want to Try Next!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         tryNextViewAll.add(label);
-        List<JButton> viewAllButtons = createTryNextViewAllButtons();
-        for (JButton btn : viewAllButtons) {
+        List<JButton> tryNextViewAllButtons = createTryNextViewAllButtons();
+        for (JButton btn : tryNextViewAllButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             tryNextViewAll.add(btn);
         }
@@ -619,7 +623,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         List<JButton> buttonList = new ArrayList<>();
         for (Restaurant r : trynext.getTryNextRestaurants()) {
             JButton btn = new JButton(r.getName());
-            btn.addActionListener(browseRestaurantAL(r.getName(), r.getLocation(), r.getCuisine()));
+            btn.addActionListener(restaurantDetailsAL(r.getName(), r.getLocation(), r.getCuisine()));
             buttonList.add(btn);
         }
         JButton returnToBrowseMenu = new JButton("Return to Try Next Menu");
@@ -633,13 +637,13 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the try next move to favourites page of the application
     public void displayMoveToFavouritesMenu() {
         JPanel moveToFavouritesMenu = new JPanel();
-        moveToFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        moveToFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         moveToFavouritesMenu.setLayout(new BoxLayout(moveToFavouritesMenu, BoxLayout.Y_AXIS));
-        label = new JLabel("Select a restaurant to move to Favourites List :");
+        label = new JLabel("Select a restaurant to move to Favourites List");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         moveToFavouritesMenu.add(label);
-        List<JButton> viewAllButtons = createMoveToFavouritesButtons();
-        for (JButton btn : viewAllButtons) {
+        List<JButton> moveToFavouritesButtons = createMoveToFavouritesButtons();
+        for (JButton btn : moveToFavouritesButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             moveToFavouritesMenu.add(btn);
         }
@@ -680,7 +684,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the try next set rating page of the application
     public void displayAddRatingMenuFromTryNext(String name) {
         JPanel addRatingMenu = new JPanel();
-        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        addRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         addRatingMenu.setLayout(new BoxLayout(addRatingMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Please give a rating from 0 - 10 for " + name);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -721,12 +725,12 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the try next remove from try next page of the application
     public void displayRemoveFromTryNextMenu() {
         JPanel removeFromTryNextMenu = new JPanel();
-        removeFromTryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        removeFromTryNextMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         removeFromTryNextMenu.setLayout(new BoxLayout(removeFromTryNextMenu, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         removeFromTryNextMenu.add(label);
-        JLabel label2 = new JLabel("Select a restaurant to move to Favourites List :");
+        JLabel label2 = new JLabel("Select a restaurant to remove from Try Next List");
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         removeFromTryNextMenu.add(label2);
         List<JButton> removeFromTryNextButtons = createRemoveFromTryNextButtons();
@@ -769,7 +773,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the favourites menu page of the application
     public void displayFavouritesMenu() {
         JPanel favouritesMenu = new JPanel();
-        favouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        favouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         favouritesMenu.setLayout(new BoxLayout(favouritesMenu, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -850,13 +854,13 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the favourites view all menu page of the application
     public void displayViewAllFavouriteRestaurants() {
         JPanel viewAllFavouritesMenu = new JPanel();
-        viewAllFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        viewAllFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         viewAllFavouritesMenu.setLayout(new BoxLayout(viewAllFavouritesMenu, BoxLayout.Y_AXIS));
-        label = new JLabel("Here are your Favourite Restaurants :");
+        label = new JLabel("Here are your Favourite Restaurants!");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         viewAllFavouritesMenu.add(label);
-        List<JButton> favouritesButtons = createViewAllFavouritesButtons();
-        for (JButton btn : favouritesButtons) {
+        List<JButton> favouritesViewAllButtons = createViewAllFavouritesButtons();
+        for (JButton btn : favouritesViewAllButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             viewAllFavouritesMenu.add(btn);
         }
@@ -884,7 +888,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                label.setText(name + "\n \t Address : " + location + "\n \t Cusine : " + cuisine
+                label.setText(name + "\n \t Address : " + location + "\n \t Cuisine : " + cuisine
                         + "\n \t Rating : " + rating);
             }
         };
@@ -894,16 +898,16 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel for the favourites edit ratings menu page of the application
     public void displayEditRatingsMenu() {
         JPanel editRatingsMenu = new JPanel();
-        editRatingsMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        editRatingsMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         editRatingsMenu.setLayout(new BoxLayout(editRatingsMenu, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         editRatingsMenu.add(label);
-        JLabel label2 = new JLabel("Which rating do you want to edit?");
+        JLabel label2 = new JLabel("Select a restaurant rating to edit");
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         editRatingsMenu.add(label2);
-        List<JButton> favouritesButtons = createEditFavouritesButtons();
-        for (JButton btn : favouritesButtons) {
+        List<JButton> favouritesEditRatingsButtons = createEditFavouritesButtons();
+        for (JButton btn : favouritesEditRatingsButtons) {
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             editRatingsMenu.add(btn);
         }
@@ -939,7 +943,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel when editing restaurant ratings in favourites menu
     public void displayEditingRatingsMenu(String name, int rating) {
         JPanel editRatingMenu = new JPanel();
-        editRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        editRatingMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         editRatingMenu.setLayout(new BoxLayout(editRatingMenu, BoxLayout.Y_AXIS));
         label = new JLabel("Current rating for " + name + " is : " + rating
                 + ". Please enter new rating from 0 - 10");
@@ -948,7 +952,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         field = new JTextField();
         field.setMaximumSize(new Dimension(100, 35));
         editRatingMenu.add(field);
-        JButton setRatingBtn = new JButton("Set Rating");
+        JButton setRatingBtn = new JButton("Set New Rating");
         setRatingBtn.addActionListener(setRatingFromFavouritesAL(name));
         setRatingBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         editRatingMenu.add(setRatingBtn);
@@ -980,12 +984,12 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: creates a panel to remove favourite restaurants in the favourites menu
     public void displayRemoveFavouritesMenu() {
         JPanel removeFromFavouritesMenu = new JPanel();
-        removeFromFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 30, 15, 15));
+        removeFromFavouritesMenu.setBorder(BorderFactory.createEmptyBorder(30, 15, 30, 15));
         removeFromFavouritesMenu.setLayout(new BoxLayout(removeFromFavouritesMenu, BoxLayout.Y_AXIS));
         label = new JLabel("");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         removeFromFavouritesMenu.add(label);
-        JLabel label2 = new JLabel("Select a restaurant to move to Favourites List :");
+        JLabel label2 = new JLabel("Select a restaurant to move to Favourites List");
         label2.setAlignmentX(Component.CENTER_ALIGNMENT);
         removeFromFavouritesMenu.add(label2);
         List<JButton> removeFromFavouritesButtons = createRemoveFromFavouritesButtons();
@@ -1035,12 +1039,11 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             jsonWriterFavourites.open();
             jsonWriterFavourites.writeFavourites(favourites);
             jsonWriterFavourites.close();
-            System.out.println("Saved Try Next list to " + JSON_TRY_NEXT);
-            System.out.println("Saved Favourites list to " + JSON_FAVOURITES);
+            displayMainMenu();
         } catch (FileNotFoundException e) {
-            System.out.println("Failed to write file");
+            displayMainMenu();
+            label.setText("Failed to write file");
         }
-        displayMainMenu();
     }
 
     // MODIFIES: this
@@ -1049,12 +1052,11 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         try {
             trynext = jsonReader.readTryNext(JSON_TRY_NEXT);
             favourites = jsonReader.readFavourites(JSON_FAVOURITES);
-            System.out.println("Try Next list has been loaded from " + JSON_TRY_NEXT);
-            System.out.println("Favourites list has been loaded from " + JSON_FAVOURITES);
+            displayMainMenu();
         } catch (IOException e) {
-            System.out.println("Failed to read file");
+            displayMainMenu();
+            label.setText("Failed to read file");
         }
-        displayMainMenu();
     }
 
 }

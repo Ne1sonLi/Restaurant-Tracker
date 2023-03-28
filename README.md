@@ -35,3 +35,13 @@ at that restaurant.
 - As a user, I want to be able to select a restaurant in my favourites list and rate it out of 10
 - As a user, I want to be able to save my Try Next and Favourites list of restaurants
 - As a user, I want to be able to have the option to reload my previously saved Try Next and Favourites lists 
+
+## Instructions for Grader
+
+- You can add restaurants to the Try Next or Favourites list through the browse menu
+- Select the "Browse Restaurants" and click "Add to Try Next" or "Add to Favourites"
+- You can also add restaurants to the Favourites list from the Try Next menu
+- Select "Try Next Restaurants" and then click "Move to Favourites List"
+- You can locate my visual component on the main menu when you first open the application
+- You can save your Try Next and Favourites list by clicking "Save Try Next & Favourites List" on the main menu
+- You can load your saved Try Next and Favourites list by clicking "Load Try Next & Favourites List" on the main menu
