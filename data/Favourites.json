@@ -1,29 +1,9 @@
 {
       "name": "Favourites List",
-      "restaurants": [
-            {
-                  "name": "Dolar Shop",
-                  "rating": 9,
-                  "cuisine": "Hotpot",
-                  "location": "5300 No. 3 Rd."
-            },
-            {
-                  "name": "Deer Garden",
-                  "rating": 9,
-                  "cuisine": "Chinese",
-                  "location": "8580 Alexandra Rd. #2015"
-            },
-            {
-                  "name": "Shanghai River",
-                  "rating": 7,
-                  "cuisine": "Chinese",
-                  "location": "7831 Westminster Hwy"
-            },
-            {
-                  "name": "Sura",
-                  "rating": 6,
-                  "cuisine": "Korean",
-                  "location": "4151 Hazelbridge Way #1830"
-            }
-      ]
+      "restaurants": [{
+            "name": "Chung Chun",
+            "rating": 10,
+            "cuisine": "Korean",
+            "location": "6020 No. 3 Rd."
+      }]
 }
