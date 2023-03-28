@@ -42,6 +42,9 @@ at that restaurant.
 - Select the "Browse Restaurants" and click "Add to Try Next" or "Add to Favourites"
 - You can also add restaurants to the Favourites list from the Try Next menu
 - Select "Try Next Restaurants" and then click "Move to Favourites List"
+- You can remove restaurants in your Try Next and Favourites list
+- To remove restaurants from your Try Next list select "Try Next Restaurants" and then click "Remove from Try Next List"
+- To remove restaurants from your Favourites list select "Favourite Restaurants" and then click "Remove from Favourites List"
 - You can locate my visual component on the main menu when you first open the application
 - You can save your Try Next and Favourites list by clicking "Save Try Next & Favourites List" on the main menu
 - You can load your saved Try Next and Favourites list by clicking "Load Try Next & Favourites List" on the main menu
