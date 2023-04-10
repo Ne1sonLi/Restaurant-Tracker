@@ -1,4 +1,9 @@
 {
       "name": "Favourites List",
-      "restaurants": []
+      "restaurants": [{
+            "name": "Deer Garden",
+            "rating": 8,
+            "cuisine": "Chinese",
+            "location": "8580 Alexandra Rd. #2015"
+      }]
 }
