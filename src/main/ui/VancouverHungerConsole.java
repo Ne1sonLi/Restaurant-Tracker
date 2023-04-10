@@ -605,7 +605,7 @@ public class VancouverHungerConsole {
     public void removeFromFavourites(String name) {
         int index = favourites.searchFavourites(name);
         favourites.getFavRestaurant(index).setRating(-1);
-        favourites.removeFavourite(index);
+        favourites.removeFavourite(name);
         System.out.println(name + " has been removed from your Favourites list");
         displayRemoveFavouritesMenu();
     }

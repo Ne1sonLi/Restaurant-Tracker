@@ -21,6 +21,7 @@ public class TryNextRestaurants {
     public void addTryNext(Restaurant r) {
         if (!containsTryNextRestaurant(r.getName())) {
             trynext.add(r);
+            EventLog.getInstance().logEvent(new Event("Added to Try Next : " + r.getName()));
         }
     }
 
@@ -74,6 +75,7 @@ public class TryNextRestaurants {
         int index = searchTryNext(name);
         Restaurant r = getRestaurant(index);
         trynext.remove(r);
+        EventLog.getInstance().logEvent(new Event("Removed from Try Next : " + name));
     }
 
     // EFFECTS: returns this as a JSON Object

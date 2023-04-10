@@ -21,6 +21,7 @@ public class FavouriteRestaurants {
     public void addFavourite(Restaurant r) {
         if (!containsFavouriteRestaurant(r.getName())) {
             favourites.add(r);
+            EventLog.getInstance().logEvent(new Event("Added to Favourites : " + r.getName()));
         }
     }
 
@@ -67,11 +68,13 @@ public class FavouriteRestaurants {
         return favourites;
     }
 
-    // REQUIRES: 0 <= index < getNumRestaurants()
+    // REQUIRES: restaurant name must be a restaurant in the favourites list
     // MODIFIES: this
-    // EFFECTS: removes a favourite restaurant in the list at the given index number
-    public void removeFavourite(int index) {
+    // EFFECTS: removes restaurant with given name from favourites list
+    public void removeFavourite(String name) {
+        int index = searchFavourites(name);
         favourites.remove(index);
+        EventLog.getInstance().logEvent(new Event("Removed from Favourites : " + name));
     }
 
     // EFFECTS: returns this as a JSON Object

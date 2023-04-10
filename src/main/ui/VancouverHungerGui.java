@@ -1,16 +1,14 @@
 package ui;
 
-import model.BrowseRestaurants;
-import model.FavouriteRestaurants;
-import model.Restaurant;
-import model.TryNextRestaurants;
+import model.*;
 import persistence.JsonReader;
 import persistence.JsonWriter;
+import model.Event;
+import model.EventLog;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,8 +32,9 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
     // EFFECTS: runs the graphical user interface application
     public VancouverHungerGui() {
         super("Vancouver Hunger");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setPreferredSize(new Dimension(750, 700));
+        this.addWindowListener(printLog());
         browse = new BrowseRestaurants();
         trynext = new TryNextRestaurants();
         favourites = new FavouriteRestaurants();
@@ -44,6 +43,19 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
         jsonReader = new JsonReader();
         initializeRestaurants();
         displayMainMenu();
+    }
+
+    // EFFECTS: creates WindowAdapter that prints out event log to console before closing application
+    public WindowAdapter printLog() {
+        return new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                for (Event event: EventLog.getInstance()) {
+                    System.out.println(event.getDescription() + ", " + event.getDate());
+                }
+                System.exit(0);
+            }
+        };
     }
 
     // MODIFIES: this
@@ -1008,10 +1020,10 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             btn.addActionListener(removeRestaurantFromFavouritesAL(r.getName()));
             buttonList.add(btn);
         }
-        JButton returnToTryNextMenu = new JButton("Return to Favourites Menu");
-        returnToTryNextMenu.setActionCommand("toFavouritesMenu");
-        returnToTryNextMenu.addActionListener(this);
-        buttonList.add(returnToTryNextMenu);
+        JButton returnToFavouritesMenu = new JButton("Return to Favourites Menu");
+        returnToFavouritesMenu.setActionCommand("toFavouritesMenu");
+        returnToFavouritesMenu.addActionListener(this);
+        buttonList.add(returnToFavouritesMenu);
         return buttonList;
     }
 
@@ -1023,7 +1035,7 @@ public class VancouverHungerGui extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent e) {
                 int index = favourites.searchFavourites(name);
                 favourites.getFavRestaurant(index).setRating(-1);
-                favourites.removeFavourite(index);
+                favourites.removeFavourite(name);
                 displayRemoveFavouritesMenu();
                 label.setText(name + " has been removed from Favourites List");
             }

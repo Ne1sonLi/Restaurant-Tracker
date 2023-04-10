@@ -24,6 +24,9 @@ public class Restaurant {
     // EFFECTS: sets/changes the rating of a restaurant when it is added to favourites list
     public void setRating(int rating) {
         this.rating = rating;
+        if (rating != -1) {
+            EventLog.getInstance().logEvent(new Event("Rating set for " + getName() + " : " + rating));
+        }
     }
 
     // EFFECTS: returns the name of the restaurant

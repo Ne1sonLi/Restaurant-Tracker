@@ -1,29 +1,4 @@
 {
       "name": "Try Next List",
-      "restaurants": [
-            {
-                  "name": "Dolar Shop",
-                  "rating": -1,
-                  "cuisine": "Hotpot",
-                  "location": "5300 No. 3 Rd."
-            },
-            {
-                  "name": "Chung Chun",
-                  "rating": -1,
-                  "cuisine": "Korean",
-                  "location": "6020 No. 3 Rd."
-            },
-            {
-                  "name": "Haidilao",
-                  "rating": -1,
-                  "cuisine": "Hotpot",
-                  "location": "5890 No. 3 Rd. Room 200"
-            },
-            {
-                  "name": "Chicko Chicken",
-                  "rating": -1,
-                  "cuisine": "Korean",
-                  "location": "4328 No. 3 Rd. #135"
-            }
-      ]
+      "restaurants": []
 }
