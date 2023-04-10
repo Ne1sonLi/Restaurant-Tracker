@@ -64,3 +64,24 @@ Removed from Try Next : Miku, Sun Apr 09 17:25:27 PDT 2023
 Rating set for Sushi Mura : 9, Sun Apr 09 17:25:33 PDT 2023
 
 Removed from Favourites : Sushi Mura, Sun Apr 09 17:25:39 PDT 2023
+
+## Phase 4: Task 3
+
+The first change that I would make would be to decrease the coupling in my model package. Currently, the
+BrowseRestaurants, TryNextRestaurants, and FavouriteRestaurants classes contain lots of duplicated code. Moreover, they
+also essentially perform the same task which is maintaining a specific list of Restaurants and performing the same
+functions for that list. Therefore, to reduce the amount of duplicated code, I would create a class called RestaurantList
+and have those three classes extend RestaurantList. In RestaurantList I would have all the methods that are shared among
+those three classes such as adding a restaurant, removing a restaurant, checking if a certain restaurant is in the list, 
+getting the index of a certain restaurant, etc. Then when calling those methods in their respective classes, I can just
+replace the body of the method with a call to its superclass's method.
+
+Another change I would make would be in the VancouverHungerGui class. For that class, when creating a new JPanel, I
+essentially copied and pasted the lines of code that set the border and layout of the panel. However, this resulted in 
+me having to copy and paste it out each time I created a new JPanel which was quite often. Therefore, to reduce the
+coupling there, I would create another method in the VancouverHungerGui class that creates a new JPanel with sets
+its border and layout. Then I would replace all those duplicated fragments of code with a call to that method. This 
+would be extremely useful if I ever decide to change the layout or border widths in the future as I can just change 
+that one method instead of changing each individual call. A disadvantage of this would be that I would have to have a
+consistent layout and border for all my panels as they will be created from the same method. This may limit the variety
+I can have in my program gui.
