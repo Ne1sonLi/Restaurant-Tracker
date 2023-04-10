@@ -50,3 +50,17 @@ at that restaurant.
 - You can locate my visual component on the main menu when you first open the application
 - You can save your Try Next and Favourites list by clicking "Save Try Next & Favourites List" on the main menu
 - You can load your saved Try Next and Favourites list by clicking "Load Try Next & Favourites List" on the main menu
+
+## Phase 4: Task 2
+
+Added to Try Next : Miku, Sun Apr 09 17:25:13 PDT 2023 
+
+Rating set for Sushi Mura : 10, Sun Apr 09 17:25:19 PDT 2023
+
+Added to Favourites : Sushi Mura, Sun Apr 09 17:25:19 PDT 2023
+
+Removed from Try Next : Miku, Sun Apr 09 17:25:27 PDT 2023
+
+Rating set for Sushi Mura : 9, Sun Apr 09 17:25:33 PDT 2023
+
+Removed from Favourites : Sushi Mura, Sun Apr 09 17:25:39 PDT 2023
